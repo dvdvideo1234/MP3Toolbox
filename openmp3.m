@@ -13,14 +13,14 @@ function [] = openmp3(path_mp3)
 %  1: openmp3('D:/music/test/test.mp3') reg. "path_mp3" value target song
 %  2: openmp3('test.mp3'), note that "test.mp3" is in the current folder
 %  3: openmp3('test')    , note that "test.mp3" is in the current folder
-%  and *.mp3 extension is prefixed
+%  and *.mp3 extension is added at the end automatically
 %
 % This function uses "mp3raead()" I didn't make "mp3raead()", it was made
-% by Alfredo Fernandez.  I only made the player itself, so u can open 
+% by Alfredo Fernandez.  I only made the player itself, so you can open 
 % *.mp3 files for listening them
 %   This code has a menu for 
-%   1 seek in percents                                         >> seek
-%   2 changing sampling rate                                >> rate
+%   1 Seek in percents                                         >> seek
+%   2 Changing sampling rate                                >> rate
 %   3 Pause Resume and Stop                             >> p , r , s
 %   4 Open another file                                         >> o
 %   5 Plot the signal and Fourier transform              >> v
@@ -33,7 +33,6 @@ function [] = openmp3(path_mp3)
 %  10 Help                                                          >> help
 
 % PLAyER made by dvd_video
-
 
 clc
 %Kill spaces

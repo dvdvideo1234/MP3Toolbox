@@ -1,9 +1,9 @@
 function X = myfft3(f)
-% The function calcolates DFT 
+% The function calculates DFT 
 % using recursive algorithm on
 % N-doted signal, however this is 
 % non-recursive part - the initialization.
-% The recursive part is calcolating the DFT
+% The recursive part is calculating the DFT
 % Call it like X = myfft3(f)
 % where in f the signal array
 % and X is the DFT result 

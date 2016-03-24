@@ -1,7 +1,7 @@
 function [out,s] = myfft2(in) 
-        % Returns same dimansion as it gets
-        % The function calcolates DFT 
-        % using well known Cooley-Tukey 
+        % Returns same dimension as it gets
+        % The function calculates DFT 
+        % using well known Cooley-Turkey 
         % algorithm on N-doted signal
         % Call it like [out,s] = myfft2(in)
         % where in is the signal array, s is the
