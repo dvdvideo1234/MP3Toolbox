@@ -10,8 +10,8 @@ A: This repository is actually an old lecture of mine when I was at the universi
    
 Q: How can I install it ?
 A: Clone this repository first inside Malab/toolbox.
-   Then click File -> Set Path -> Add with subfolders.
-   Click the mp3 toolbaox and OK. You are done.
+   Then click File -> Set Path -> Add with sub-folders.
+   Click the mp3 toolbox and OK. You are done.
    Type "help openmp3" ( without the quotes ).
    If an output is present, you have done it right.
    
