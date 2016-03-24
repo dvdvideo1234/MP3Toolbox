@@ -18,7 +18,7 @@ A: Clone this repository first inside Malab/toolbox.
 Q: How can I use the mp3 player ?
 A: Type "help openmp3" ( without the quotes ).
    It will show you how to use it.
-   pen an mp3 file by setting the argument to its path.
+   Open an mp3 file by setting the argument to its path.
    It will start running. Type "help" to explore additional options
 N: The function uses the fastest iterative divider DFT algorithm ( myfft1 ) of the all three.
 
