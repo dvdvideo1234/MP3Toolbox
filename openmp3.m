@@ -26,7 +26,7 @@ function [] = openmp3(path_mp3)
   %   5) "v" - Open viewing options
   %      "c" - Plot the signal and DFT with the 2D graph selected
   %      "s" - Mesh the signal and DFT with the 3D graph selected
-  %      "acl" - Selects a different DFT algorithm to be used
+  %      "dft" - Selects a different DFT algorithm to be used
   %   6) "info"  - Audioplayer information
   %   7) "clc"   - Clear screen
   %   8) "dir"   - View current workspace directory
@@ -195,7 +195,7 @@ function [] = openmp3(path_mp3)
          end
       case 'v', DFT.UserInput=input('Command >> View >>','s');
         switch DFT.UserInput
-          case 'acu', DFT.Calc.Cur = selectAlgorithm(DFT.Calc);
+          case 'dft', DFT.Calc.Cur = selectAlgorithm(DFT.Calc);
           case 'c',
             DFT.Plot2D.Cur = selectAlgorithm(DFT.Plot2D);
             drawArgs = DFT.Plot2D.Alg{DFT.Plot2D.Cur};
@@ -221,7 +221,7 @@ function [] = openmp3(path_mp3)
       case 'r'   , resume(DFT.Object);
       case 'help', display({'p - Pause';'r - Resume';'s - Stop';'q - Quit';'o - Open a file';'seek - Seek(Put a percent)';'clc - Clear screen';...
            'info - Display object';'dir - View directory';'plist - Paylist';'add,rem(ove),sel(ect),info';...
-           'v - Draw signal (v)iew >> c - Curve 2D plot, s - Surface 3D plot, acl - DFT calcolator select';'help - Displays this info'});
+           'v - Draw signal (v)iew >> c - Curve 2D plot, s - Surface 3D plot, dft - DFT calcolator select';'help - Displays this info'});
       case 'plist', DFT.UserInput = input('Command >> PlayList >>','s');
         switch DFT.UserInput
           case 'add', DFT.UserInput = input('Command >> PlayList >> Add >>','s');
