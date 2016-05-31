@@ -1,10 +1,11 @@
-function [] = drawCurveDFT(fhDraw, plyAud, smpSig, maxSig, lenDFT, namDFT)
+function [] = drawCurvDFT(fnDFT, plyAud, smpSig, fhDraw, namDFT, maxSig, lenDFT)
   % Draws a fourier DFT curve relative to the current sample of an audio player
   % with draw method provided and matrix size, limiting the max value
   %
-  % Example: void drawCurveDFT(fhDraw, plyAud, smpSig, maxSig, lenDFT, namDFT)
+  % Example: void drawCurvDFT(fnDFT, plyAud, smpSig, fhDraw, namDFT, maxSig, lenDFT)
   %
   % fhDraw - The drawing method of the curve ( matrix ), provided as a function handle
+  % fhDFT  - The DFT calcolator to be used, provided as a function handle
   % smpSig - The sample signal plotted, or gathered from a file as matrix-column
   % plyAud - The object of type audioplayer, keping in track of the DFT state
   % lenDFT - The number of points the DFT is calcolated for, the higher, the accurate
@@ -26,8 +27,8 @@ function [] = drawCurveDFT(fhDraw, plyAud, smpSig, maxSig, lenDFT, namDFT)
     elseif(plyAud.CurrentSample > lenDFT)
       left = smpSig(plyAud.CurrentSample-lenDFT:plyAud.CurrentSample,1);
       righ = smpSig(plyAud.CurrentSample-lenDFT:plyAud.CurrentSample,2);
-      ft(:,1)=myfft1(left(1:lenDFT).*wind);
-      ft(:,2)=myfft1(righ(1:lenDFT).*wind);
+      ft(:,1)=fnDFT(left(1:lenDFT).*wind);
+      ft(:,2)=fnDFT(righ(1:lenDFT).*wind);
       ftt = matsat(abs(ft(1:half,:)),brdm); %ftt = ftt(1:b,:);                    
       subplot(2,2,1), plot(left), title('Sampled Signal'), xlabel('Sample'),
       ylabel('Value'), xlim([0 lenDFT]), ylim(brds), grid

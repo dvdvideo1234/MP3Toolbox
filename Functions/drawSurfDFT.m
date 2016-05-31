@@ -1,10 +1,11 @@
-function [] = drawSurfaceDFT(fhDraw, plyAud, smpSig, maxSig, lenDFT, falDFT, namDFT)
+function [] = drawSurfDFT(fhDFT, plyAud, smpSig, fhDraw, namDFT, maxSig, lenDFT, falDFT)
   % Draws a fourier DFT surface relative to the current sample of an audio player
   % with draw method provided and matrix size, limiting the max value
   %
-  % Example: void drawSurfaceDFT(fhDraw, plyAud, smpSig, maxSig, lenDFT, falDFT, namDFT)
+  % Example: void drawSurfDFT(fhDFT, plyAud, smpSig, fhDraw, namDFT, maxSig, lenDFT, falDFT)
   %
   % fhDraw - The drawing method of the surface ( matrix ), provided as a function handle
+  % fhDFT  - The DFT calcolator to be used, provided as a function handle
   % smpSig - The sample signal plotted, or gathered from a file as matrix-column
   % plyAud - The object of type audioplayer, keping in track of the DFT state
   % lenDFT - The number of points the DFT is calcolated for, the higher, the accurate
@@ -30,8 +31,8 @@ function [] = drawSurfaceDFT(fhDraw, plyAud, smpSig, maxSig, lenDFT, falDFT, nam
       righ = smpSig(plyAud.CurrentSample-lenDFT:plyAud.CurrentSample,2);
       left = left(1:lenDFT);
       righ = righ(1:lenDFT);
-      fl = abs(myfft1(left.*wind));
-      fr = abs(myfft1(righ.*wind));
+      fl = abs(fhDFT(left.*wind));
+      fr = abs(fhDFT(righ.*wind));
       ftl = shiftArr(ftl,1);
       ftr = shiftArr(ftr,1);
       ftl(:,1) = matsat(fl(1:half),brdm); %swaparr(fl(1:half),2);
