@@ -11,7 +11,9 @@ function [] = drawCurvDFT(fnDFT, plyAud, smpSig, fhDraw, namDFT, maxSig, lenDFT)
   % lenDFT - The number of points the DFT is calcolated for, the higher, the accurate
   % maxSig - The maximum saturation value for the signal
   % namDFT - The name of the subplots of DFT
-  if(lenDFT <= 0) return; end                   
+  if(lenDFT <= 0)
+    return;
+  end
   half = floor(lenDFT/2);
   wind = blackman(lenDFT);
   df   = plyAud.SampleRate/lenDFT;
@@ -23,7 +25,8 @@ function [] = drawCurvDFT(fnDFT, plyAud, smpSig, fhDraw, namDFT, maxSig, lenDFT)
   brds = [-1 1];
   while((plyAud.CurrentSample < plyAud.TotalSamples) && (plyAud.CurrentSample ~= 1))
     figure(fig)
-    if(~ishandle(fig)) break;
+    if(~ishandle(fig))
+      break;
     elseif(plyAud.CurrentSample > lenDFT)
       left = smpSig(plyAud.CurrentSample-lenDFT:plyAud.CurrentSample,1);
       righ = smpSig(plyAud.CurrentSample-lenDFT:plyAud.CurrentSample,2);

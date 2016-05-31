@@ -11,7 +11,8 @@ function out = slashstringn(path,len)
   if(len > 0)
     if(lp-slash < len) out = path(slash+1:lp);
     else out = path(slash+1:slash+len);
-    end return;
+    end
+    return;
   elseif(len == 0)
     out = slash; return;
   elseif(len < 0)

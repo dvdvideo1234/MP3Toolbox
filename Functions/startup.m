@@ -1,4 +1,4 @@
 % This is a start-up script
-cd('G:\Documents\MATLAB');
+cd('O:\Documents\MATLAB\mp3_test');
 clear all
 clc
