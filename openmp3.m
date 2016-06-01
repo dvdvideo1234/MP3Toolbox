@@ -27,6 +27,7 @@ function [] = openmp3(path_mp3)
   %      "c" - Plot the signal and DFT with the 2D graph selected
   %      "s" - Mesh the signal and DFT with the 3D graph selected
   %      "dft" - Selects a different DFT algorithm to be used
+  %      "win" - Selects a window to weighten the samples 
   %   6) "info"  - Audioplayer information
   %   7) "clc"   - Clear screen
   %   8) "dir"   - View current workspace directory
@@ -60,6 +61,21 @@ function [] = openmp3(path_mp3)
   DFT.Plot2D.Inf = '2D plotter';
   DFT.Plot2D.Alg = {
     { @plot, 'Plot graph', 40, 2048 }
+  };
+  % Load a list of windows
+  DFT.Wind.Cur = 1; % The current selected plotter
+  DFT.Wind.Inf = 'Signal window';
+  DFT.Wind.Alg = {
+    { @blackman  , 'Blackman'    }
+    { @hamming   , 'Hamming '    }
+    { @bartlett  , 'Bartlett'    }
+    { @rectwin   , 'Rectangle'   }
+    { @chebwin   , 'Chebishev'   }
+    { @hann      , 'Hann'        }
+    { @kaiser    , 'Kaiser'      }
+    { @taylorwin , 'Taylor'      }
+    { @hamming   , 'Hamming'     }
+    { @triang    , 'Triangular'  }
   };
   DFT.Dummy             = 0;
   DFT.Object            = 0;
@@ -146,7 +162,9 @@ function [] = openmp3(path_mp3)
               DFT.UserInput=str2double(DFT.UserInput);
               if(((DFT.UserInput > 0) && (DFT.Object.SampleRate+DFT.UserInput < 1000000))...
                 || ((DFT.UserInput < 0) && (DFT.Object.SampleRate+DFT.UserInput > 0)))
-                mp3rate(DFT.Object,DFT.UserInput)
+                pause(DFT.Object);
+                DFT.Object.SampleRate = DFT.Object.SampleRate + DFT.UserInput
+                resume(mp3);
               end
             end
          end
@@ -175,21 +193,23 @@ function [] = openmp3(path_mp3)
          end
       case 'v', DFT.UserInput = input('Command >> View >>','s');
         switch DFT.UserInput
+          case 'win', DFT.Wind.Cur = selectAlgorithm(DFT.Wind);
           case 'dft', DFT.Calc.Cur = selectAlgorithm(DFT.Calc);
           case 'c',
             DFT.Plot2D.Cur = selectAlgorithm(DFT.Plot2D);
             DFT.Dummy      = DFT.Plot2D.Alg{DFT.Plot2D.Cur};
-            drawCurvDFT(DFT.Calc.Alg{DFT.Calc.Cur}{1}, DFT.Object, DFT.Signal, DFT.Dummy{1}, DFT.Dummy{2}, DFT.Dummy{3}, DFT.Dummy{4});
+            drawCurvDFT(DFT.Calc.Alg{DFT.Calc.Cur}{1}, DFT.Wind{DFT.Wind.Cur}{1}, DFT.Object, DFT.Signal, DFT.Dummy{1}, DFT.Dummy{2}, DFT.Dummy{3}, DFT.Dummy{4});
           case 's',
             DFT.Plot3D.Cur = selectAlgorithm(DFT.Plot3D);
             DFT.Dummy      = DFT.Plot3D.Alg{DFT.Plot3D.Cur};
-            drawSurfDFT(DFT.Calc.Alg{DFT.Calc.Cur}{1}, DFT.Object, DFT.Signal, DFT.Dummy{1}, DFT.Dummy{2}, DFT.Dummy{3}, DFT.Dummy{4}, DFT.Dummy{5});
+            drawSurfDFT(DFT.Calc.Alg{DFT.Calc.Cur}{1}, DFT.Wind{DFT.Wind.Cur}{1}, DFT.Object, DFT.Signal, DFT.Dummy{1}, DFT.Dummy{2}, DFT.Dummy{3}, DFT.Dummy{4}, DFT.Dummy{5});
           case 'b', continue;
           case 'cmd', display({
                   'b   - Back';...
                   'c   - Plot the signal and DFT in 2D mode';...
                   's   - Plot the signal and DFT in 3D mode';...
                   'dft - Select DFT algorithm to be used';...
+                  'win - Select window to be used';...
                   'cmd - Displays this info'});
           otherwise , display('Command invalid !!!');
         end
@@ -200,7 +220,7 @@ function [] = openmp3(path_mp3)
       case 'r'   , resume(DFT.Object);
       case 'h'   , display({'p - Pause';'r - Resume';'s - Stop';'q - Quit';'o - Open a file';'seek - Seek(Put a percent)';'clc - Clear screen';...
            'inf - Display object';'dir - View directory';'pl - Paylist';'add,rem(ove),sel(ect),inf(ormation)';...
-           'v(iew) - Draw signal';'(c)urve - 2D, s(urface) - 3D, dft - DFT calcolator';'h - Displays this info'});
+           'v(iew) - Draw signal';'(c)urve - 2D, s(urface) - 3D, dft - DFT calcolator, win - Window selction';'h - Displays this info'});
       case 'pl', DFT.UserInput = input('Command >> Playlist >>','s');
         switch DFT.UserInput
           case 'add', DFT.UserInput = input('Command >> Playlist >> Add >>','s');

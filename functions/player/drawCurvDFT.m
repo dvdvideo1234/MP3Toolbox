@@ -1,10 +1,11 @@
-function [] = drawCurvDFT(fnDFT, plyAud, smpSig, fhDraw, namDFT, maxSig, lenDFT)
+function [] = drawCurvDFT(fnDFT, fnWind, plyAud, smpSig, fhDraw, namDFT, maxSig, lenDFT)
   % Draws a fourier DFT curve relative to the current sample of an audio player
   % with draw method provided and matrix size, limiting the max value
   %
   % Example: void drawCurvDFT(fnDFT, plyAud, smpSig, fhDraw, namDFT, maxSig, lenDFT)
   %
   % fhDraw - The drawing method of the curve ( matrix ), provided as a function handle
+  % fnWind - The window to be used, provided as a function handle
   % fhDFT  - The DFT calcolator to be used, provided as a function handle
   % smpSig - The sample signal plotted, or gathered from a file as matrix-column
   % plyAud - The object of type audioplayer, keping in track of the DFT state
@@ -15,7 +16,7 @@ function [] = drawCurvDFT(fnDFT, plyAud, smpSig, fhDraw, namDFT, maxSig, lenDFT)
     return;
   end
   half = floor(lenDFT/2);
-  wind = blackman(lenDFT);
+  wind = fnWind(lenDFT);
   df   = plyAud.SampleRate/lenDFT;
   freq = (1:1:lenDFT) * df;
   freq = freq(1:half);

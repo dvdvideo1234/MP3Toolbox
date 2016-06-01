@@ -1,10 +1,11 @@
-function [] = drawSurfDFT(fhDFT, plyAud, smpSig, fhDraw, namDFT, maxSig, lenDFT, falDFT)
+function [] = drawSurfDFT(fhDFT, fnWind, plyAud, smpSig, fhDraw, namDFT, maxSig, lenDFT, falDFT)
   % Draws a fourier DFT surface relative to the current sample of an audio player
   % with draw method provided and matrix size, limiting the max value
   %
   % Example: void drawSurfDFT(fhDFT, plyAud, smpSig, fhDraw, namDFT, maxSig, lenDFT, falDFT)
   %
   % fhDraw - The drawing method of the surface ( matrix ), provided as a function handle
+  % fnWind - The window to be used, provided as a function handle
   % fhDFT  - The DFT calcolator to be used, provided as a function handle
   % smpSig - The sample signal plotted, or gathered from a file as matrix-column
   % plyAud - The object of type audioplayer, keping in track of the DFT state
@@ -14,7 +15,7 @@ function [] = drawSurfDFT(fhDFT, plyAud, smpSig, fhDraw, namDFT, maxSig, lenDFT,
   % namDFT - The name of the subplots of DFT
   if(lenDFT <= 0) return; end
   half = floor(lenDFT/2);
-  wind = blackman(lenDFT);
+  wind = fnWind(lenDFT);
   ftl  = zeros(half,falDFT);
   ftr  = zeros(half,falDFT);
   df   = strcat(num2str(floor(plyAud.SampleRate/lenDFT)),'n','[Hz]');
