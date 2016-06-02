@@ -17,36 +17,36 @@ function Y=myfft1(input)
   %   Columns 3 through 4
   % 
   %   -2.0000            -2.0000 + 2.0000i
-  sz=size(input);
+  sz = size(input);
   if(sz(1) > sz(2))
       input = input';
       Tflag = 1;
   else
       Tflag = 0;
   end
-  r=log2(max(sz));
-  p=ceil(r); 
-  Y=zerofil(input); 
-  N = 2^p;
-  N2=N/2; 
+  r  = log2(max(sz));
+  p  = ceil(r); 
+  Y  = zerofil(input); 
+  N  = 2^p;
+  N2 = N/2; 
   YY = -pi*sqrt(-1)/N2; 
   WW = exp(YY);  
   JJ = 0 : N2-1;  
-  W=WW.^JJ;
+  W  = WW.^JJ;
   for k = 1 : p-1
-    u=Y(:,1:N2);
-    v=Y(:,N2+1:N);
-    t=u+v;
-    S=W.*(u-v);
-    Y=[t ; S];
-    U=W(:,1:2:N2);
-    W=[U ;U];
-    N=N2;
-    N2=N2/2;
+    u  = Y(:,1:N2);
+    v  = Y(:,N2+1:N);
+    t  = u+v;
+    S  = W.*(u-v);
+    Y  = [t ; S];
+    U  = W(:,1:2:N2);
+    W  = [U ;U];
+    N  = N2;
+    N2 = N2/2;
   end;
-  u=Y(:,1);
-  v=Y(:,2);
-  T=[u+v;u-v];
+  u = Y(:,1);
+  v = Y(:,2);
+  T = [u+v;u-v];
   if(Tflag)
      Y = T;
   else

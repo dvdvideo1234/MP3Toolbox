@@ -35,41 +35,44 @@ function [out,s] = myfft2(in)
   else
     Tflag = 0;
   end
+  s  = [];
   in = zerofil(in);
-  s = [];
-  N = length(in);  % Broi To4ki
-  N2 = floor(N/2); % Peperudi na faza
-  A = zeros(1,N);  % Prazen masiv za peperudite
-  Warr = zeros(1,N2); % Masiv za stepenite na W
-  % v kolko bita da se napravi nirrornum
-  Bitreversed = getbit2(N-1); 
-  for k=0:1:N-1
-    A(k+1) = in(mirnum2(k,Bitreversed)+1);
+  N  = length(in);  % Points count
+  N2 = floor(N/2);  % Butterflies per phase
+  A  = zeros(1,N);  % Empty array to store the butterflies
+  T  = zeros(1,N);  % Empty array to store the butterflies
+  W  = zeros(1,N2); % Array for powers of W
+  % Number of bits to apply mirnum for
+  rev = getbit2(N-1); 
+  for k = 1:N
+    A(k) = in(mirnum(k-1,rev)+1);
   end
   % Calculates all W-s
   for k = 1:1:N2
-    Warr(k) = exp(-pi*sqrt(-1)*(k-1)/N2);
+    W(k) = exp(-pi*sqrt(-1)*(k-1)/N2);
   end
-
-  phasemask = 1;
-
-  while(phasemask ~= N) 
+  % m - Current phase
+  % k - Index in reversed array A
+  % l - Index of the other butterfly wing
+  % f - Index of W values
+  m = 1;
+  for m = 1:N2
     for k = 1:N 
-      % generaciq na A vuv faza "phasemask"
-      f = bitand(k-1,phasemask-1)+1;
-      if(bitand(phasemask,k-1))
-        l = k-phasemask;
-        Arrout(k)= A(l)-Warr(f)*A(k);
+      % Generation of A in phase m
+      f = bitand(k-1,m-1)+1;
+      if(bitand(m,k-1))
+        l = k-m;
+        T(k)= A(l)-W(f)*A(k);
         c = -1;
       else
-        l = k+phasemask;
-        Arrout(k)= A(k)+Warr(f)*A(l);
+        l = k+m;
+        T(k)= A(k)+W(f)*A(l);
         c = 1;
       end
-      s=[s;[phasemask k l f-1 c]];
+      s=[s;[m k l f-1 c]];
     end 
-    A = Arrout;
-    phasemask = bitshift(phasemask,1); 
+    A = T;
+    m = bitshift(m,1); 
   end
   if(Tflag)
     out = A';
