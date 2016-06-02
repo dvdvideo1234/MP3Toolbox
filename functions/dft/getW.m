@@ -1,11 +1,13 @@
-function out = getW(n,N2)
-  % Calcolates Wn prime factor first arg is power
-  % n secon one is number of dots N2.
-  % Example:
+function out = getW(k,n)
+  % Calcolates Wn prime factor where:
+  % k - The power of the prime factor 
+  % n - The number of dots per phase
+  % Example: out = getW(k,n)
   % > getW(3,8)
   % 
   % ans =
   % 
-  %  0.3827 - 0.9239i
-  out = exp((-sqrt(-1)*pi*n)/N2);
+  %  -0.70711 - 0.70711i
+  out = exp((-2*pi*sqrt(-1)*k)/n);
+  return;
 end

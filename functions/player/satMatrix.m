@@ -1,4 +1,4 @@
-function out = matsat(in,bounds)
+function out = satMatrix(in,bounds)
   % Saturates a matrix
   sz = size(in);
   out = zeros(sz);

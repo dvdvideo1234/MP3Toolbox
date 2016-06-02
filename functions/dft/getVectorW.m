@@ -1,4 +1,4 @@
-function W = Wn(n)
+function W = getVectorW(n)
   % Calcolates Wn in vector-row-array
   % Example:
   % n = 4;

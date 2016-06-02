@@ -1,4 +1,4 @@
-function f = ramaFac(n)
+function f = ramaFactorial(n)
   if(n > 0)
     sqpi = log(pi)/2;
     nne = (log(n)-1)*n;

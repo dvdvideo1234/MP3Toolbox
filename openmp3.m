@@ -43,10 +43,10 @@ function [] = openmp3(path_mp3)
   DFT.Calc.Cur = 1;
   DFT.Calc.Inf = 'DFT calculator';
   DFT.Calc.Alg = {
-    { @fft   , 'Default integrated'              }
-    { @myfft1, 'Vector-Matrix iterative'         }
-    { @myfft2, 'Coukey-Turkey from the textbook' }
-    { @myfft3, 'Recursive using odd and even'    }
+    { @fft      , 'Default integrated'              }
+    { @fftVector, 'Vector-Matrix iterative'         }
+    { @fftRadix , 'Coukey-Turkey from the textbook' }
+    { @fftRecurs, 'Recursive using odd and even'    }
   };
   % Plots help: http://www.mathworks.com/help/matlab/creating_plots/types-of-matlab-plots.html
   % Load 3D plots ( Size of the window, Points count, Memorized DFT count, Label )
@@ -171,6 +171,7 @@ function [] = openmp3(path_mp3)
       % Needs waiting for a key
       DFT.UserInput=input('Command >>','s');
       switch DFT.UserInput
+      case 'save' display('Store selections in a file.');
       case 'p', pause(DFT.Object);
       case 'rate', DFT.Dummy     = num2str(DFT.Object.SampleRate);
                    DFT.Dummy     = strcat('Command >> Rate = <',DFT.Dummy ,'> >>');
@@ -188,7 +189,7 @@ function [] = openmp3(path_mp3)
                 resume(mp3);
               end
             end
-         end
+          end
        case 'seek'
          DFT.Dummy = percent_q(DFT.Object.CurrentSample,DFT.Object.TotalSamples)
          DFT.Dummy = num2str(DFT.Dummy);

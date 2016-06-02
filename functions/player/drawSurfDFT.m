@@ -36,8 +36,8 @@ function [] = drawSurfDFT(fhDFT, fnWind, plyAud, smpSig, fhDraw, namDFT, maxSig,
       fr = abs(fhDFT(righ.*wind));
       ftl = shiftArr(ftl,1);
       ftr = shiftArr(ftr,1);
-      ftl(:,1) = matsat(fl(1:half),brdm); %swaparr(fl(1:half),2);
-      ftr(:,1) = matsat(fr(1:half),brdm); %swaparr(fr(1:half),2);
+      ftl(:,1) = satMatrix(fl(1:half),brdm); %swaparr(fl(1:half),2);
+      ftr(:,1) = satMatrix(fr(1:half),brdm); %swaparr(fr(1:half),2);
       subplot(2,2,1), plot(left), title('Sampled Signal'),xlabel('Sample'), ylabel('Value'),
       xlim([1 lenDFT]), ylim([-1 1]), grid
       subplot(2,2,2), plot(righ), title('Sampled Signal'),xlabel('Sample'), ylabel('Value'),

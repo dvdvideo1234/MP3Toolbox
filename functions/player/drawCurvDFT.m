@@ -33,7 +33,7 @@ function [] = drawCurvDFT(fnDFT, fnWind, plyAud, smpSig, fhDraw, namDFT, maxSig,
       righ = smpSig(plyAud.CurrentSample-lenDFT:plyAud.CurrentSample,2);
       ft(:,1)=fnDFT(left(1:lenDFT).*wind);
       ft(:,2)=fnDFT(righ(1:lenDFT).*wind);
-      ftt = matsat(abs(ft(1:half,:)),brdm); %ftt = ftt(1:b,:);                    
+      ftt = satMatrix(abs(ft(1:half,:)),brdm); %ftt = ftt(1:b,:);                    
       subplot(2,2,1), plot(left), title('Sampled Signal'), xlabel('Sample'),
       ylabel('Value'), xlim([0 lenDFT]), ylim(brds), grid
       subplot(2,2,2), plot(righ), title('Sampled Signal'), xlabel('Sample'),

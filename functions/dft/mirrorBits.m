@@ -1,4 +1,4 @@
-function [a] = mirnum(num,b)
+function [out] = mirrorBits(num,b)
   % Mirrorizes a number in "b" bits, 
   % using bitwise operations
   % [1 1 0] --> [0 1 1]
@@ -9,6 +9,7 @@ function [a] = mirnum(num,b)
   % ans = 6 ( 3 --> [0 1 1] <> [1 1 0] --> 6 )
   if(num == 0) 
     out = 0;
+    return;
   else 
     t = 0;
     n = num;
@@ -17,6 +18,7 @@ function [a] = mirnum(num,b)
       t = bitor(t,bitand(n,1));
       n = bitshift(n,-1);
     end
-    a = t;
+    out = t;
   end
+  return;
 end

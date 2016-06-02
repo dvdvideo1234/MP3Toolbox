@@ -5,13 +5,14 @@ function [out] = getNextValidID(pl,id,mod)
   fl = 10; % Maxtimum number of loops no a missing file
   sz = size(pl);
   ln = length(pl);
+  if(id <  1), id = 1 ; end
+  if(id > ln), id = ln; end
   % Apply selection mode
-  if(strcmp(mod,'seq'))
-    st = 1;
-  elseif(strcmp(mod,'rnd'))
-    st = floor((rand(1,1) * ln));
-  else
-    display('Item id selection mode invalid !!!');
+  switch mod
+    case 'seq', st = 1;
+    case 'rnd', st = floor((rand(1,1) * ln));
+  otherwise
+    display(strcat('Item mode <',mod,'> invalid !!!'));
     out = 1;
     return;
   end
