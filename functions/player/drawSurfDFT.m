@@ -2,7 +2,7 @@ function [] = drawSurfDFT(fhDFT, fnWind, plyAud, smpSig, fhDraw, namDFT, maxSig,
   % Draws a fourier DFT surface relative to the current sample of an audio player
   % with draw method provided and matrix size, limiting the max value
   %
-  % Example: void drawSurfDFT(fhDFT, plyAud, smpSig, fhDraw, namDFT, maxSig, lenDFT, falDFT)
+  % Example: void drawSurfDFT(fhDFT, fnWind, plyAud, smpSig, fhDraw, namDFT, maxSig, lenDFT, falDFT)
   %
   % fhDraw - The drawing method of the surface ( matrix ), provided as a function handle
   % fnWind - The window to be used, provided as a function handle
