@@ -14,10 +14,10 @@ function [] = openmp3(path_mp3)
   %  3: openmp3('test')    , note that "test.mp3" is in the current folder
   %  and *.mp3 extension is added at the end automatically
   %
-  % This function uses "mp3raead()" I didn't make "mp3raead()", it was made
-  % by Alfredo Fernandez.  I only made the player itself, so you can open
+  % This function uses "mp3read()" I didn't make it. It was made
+  % by Alfredo Fernandez. I only made the player itself, so you can open
   % *.mp3 files for listening them and experimenting with different DFT
-  % algorithms and plotters in real time
+  % algorithms, windows and plotters in real time
   %   This code has a menu for
   %   1) "seek"      - Seek the file in percents
   %   2) "rate"      - Changing sampling rate of the audio player
@@ -27,7 +27,7 @@ function [] = openmp3(path_mp3)
   %      "c" - Plot the signal and DFT with the 2D graph selected
   %      "s" - Mesh the signal and DFT with the 3D graph selected
   %      "dft" - Selects a different DFT algorithm to be used
-  %      "win" - Selects a window to weighten the samples 
+  %      "win" - Selects a window to weighten the samples
   %   6) "info"  - Audioplayer information
   %   7) "clc"   - Clear screen
   %   8) "dir"   - View current workspace directory
@@ -82,21 +82,28 @@ function [] = openmp3(path_mp3)
     { @bar      , 'Bar graph'           , 40, 2048 }
     { @stem     , 'Stem graph'          , 40, 2048 }
     { @histogram, 'Histogram graph'     , 40, 2048 }
-    
   };
   % Load a list of windows
   DFT.Wind.Cur = 1; % The current selected plotter
   DFT.Wind.Inf = 'Signal window';
   DFT.Wind.Alg = {
-    { @blackman  , 'Blackman'    }
-    { @hamming   , 'Hamming '    }
-    { @bartlett  , 'Bartlett'    }
-    { @rectwin   , 'Rectangle'   }
-    { @chebwin   , 'Chebishev'   }
-    { @hann      , 'Hann'        }
-    { @kaiser    , 'Kaiser'      }
-    { @taylorwin , 'Taylor'      }
-    { @triang    , 'Triangular'  }
+    { @barthannwin   , 'Barthann'      }
+    { @bartlett      , 'Bartlett'      }
+    { @blackman      , 'Blackman'      }
+    { @blackmanharris, 'Blackmanharris'}
+    { @bohmanwin     , 'Bohman'        }
+    { @chebwin       , 'Chebishev'     }
+    { @flattopwin    , 'Flattop'       }
+    { @gausswin      , 'Gaussian'      }
+    { @hamming       , 'Hamming '      }
+    { @hann          , 'Hann'          }
+    { @kaiser        , 'Kaiser'        }
+    { @nuttallwin    , 'Nuttall'       }
+    { @parzenwin     , 'Parzen'        }
+    { @rectwin       , 'Rectangle'     }
+    { @taylorwin     , 'Taylor'        }
+    { @triang        , 'Triangular'    }
+    { @tukeywin      , 'Tukeywin'      }
   };
   DFT.Dummy             = 0;
   DFT.Object            = 0;
@@ -121,6 +128,7 @@ function [] = openmp3(path_mp3)
   catch err;
     if(~isempty(err.message))
       display(strcat('File invalid:',DFT.Path))
+      display(strcat('Error:',err.message))
       display('Atleast first open file should be valid !!!')
       return;
     end
@@ -258,6 +266,7 @@ function [] = openmp3(path_mp3)
             catch err;
               if(~isempty(err.message))
                 display(strcat('File invalid:',DFT.UserInput))
+                display(strcat('Error:',err.message))
                 display('This path cannot be added to the playlist !!!')
               end
             end
