@@ -179,7 +179,7 @@ function [] = openmp3(path_mp3)
       % Needs waiting for a key
       DFT.UserInput=input('Command >>','s');
       switch DFT.UserInput
-      case 'save' display('Store selections in a file.');
+      case 'save', display('Store selections in a file.');
       case 'p', pause(DFT.Object);
       case 'rate', DFT.Dummy     = num2str(DFT.Object.SampleRate);
                    DFT.Dummy     = strcat('Command >> Rate = <',DFT.Dummy ,'> >>');
@@ -193,13 +193,13 @@ function [] = openmp3(path_mp3)
               if(((DFT.UserInput > 0) && (DFT.Object.SampleRate+DFT.UserInput < 1000000))...
                 || ((DFT.UserInput < 0) && (DFT.Object.SampleRate+DFT.UserInput > 0)))
                 pause(DFT.Object);
-                DFT.Object.SampleRate = DFT.Object.SampleRate + DFT.UserInput
+                DFT.Object.SampleRate = DFT.Object.SampleRate + DFT.UserInput;
                 resume(mp3);
               end
             end
-          end
+         end
        case 'seek'
-         DFT.Dummy = percent_q(DFT.Object.CurrentSample,DFT.Object.TotalSamples)
+         DFT.Dummy = percent_q(DFT.Object.CurrentSample,DFT.Object.TotalSamples);
          DFT.Dummy = num2str(DFT.Dummy);
          DFT.Dummy = strcat('Command >> Seek >',DFT.Dummy,'%< >>');
          DFT.UserInput = input(DFT.Dummy,'s');
@@ -216,7 +216,7 @@ function [] = openmp3(path_mp3)
              if(isnan(DFT.Dummy))
                continue;
              end
-             DFT.Dummy = part_q(DFT.Dummy,DFT.Object.TotalSamples)
+             DFT.Dummy = part_q(DFT.Dummy,DFT.Object.TotalSamples);
              DFT.Dummy = floor(DFT.Dummy);
              stop(DFT.Object);
              play(DFT.Object,[DFT.Dummy DFT.Object.TotalSamples]);
@@ -228,11 +228,11 @@ function [] = openmp3(path_mp3)
           case 'c',
             DFT.Plot2D.Cur = selectAlgorithm(DFT.Plot2D);
             DFT.Dummy      = DFT.Plot2D.Alg{DFT.Plot2D.Cur};
-            drawCurvDFT(DFT.Calc.Alg{DFT.Calc.Cur}{1}, DFT.Wind{DFT.Wind.Cur}{1}, DFT.Object, DFT.Signal, DFT.Dummy{1}, DFT.Dummy{2}, DFT.Dummy{3}, DFT.Dummy{4});
+            drawCurvDFT(DFT.Calc.Alg{DFT.Calc.Cur}{1}, DFT.Wind.Alg{DFT.Wind.Cur}{1}, DFT.Object, DFT.Signal, DFT.Dummy{1}, DFT.Dummy{2}, DFT.Dummy{3}, DFT.Dummy{4});
           case 's',
             DFT.Plot3D.Cur = selectAlgorithm(DFT.Plot3D);
             DFT.Dummy      = DFT.Plot3D.Alg{DFT.Plot3D.Cur};
-            drawSurfDFT(DFT.Calc.Alg{DFT.Calc.Cur}{1}, DFT.Wind{DFT.Wind.Cur}{1}, DFT.Object, DFT.Signal, DFT.Dummy{1}, DFT.Dummy{2}, DFT.Dummy{3}, DFT.Dummy{4}, DFT.Dummy{5});
+            drawSurfDFT(DFT.Calc.Alg{DFT.Calc.Cur}{1}, DFT.Wind.Alg{DFT.Wind.Cur}{1}, DFT.Object, DFT.Signal, DFT.Dummy{1}, DFT.Dummy{2}, DFT.Dummy{3}, DFT.Dummy{4}, DFT.Dummy{5});
           case 'b', continue;
           case 'inf', display({
                   'b   - Back';...

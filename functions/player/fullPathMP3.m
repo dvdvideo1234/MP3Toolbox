@@ -5,7 +5,7 @@ function [out] = fullPathMP3(in)
   % "F:\samples\test"     --> F:\samples\test.mp3
   % "F:\samples\test.mp3" --> F:\samples\test.mp3
   path = in;
-  lenp = length(path)
+  lenp = length(path);
   % Add ".mp3 if not present"
   if(~strcmp(path((lenp-3):lenp),'.mp3'))
     path = strcat(path,'.mp3');

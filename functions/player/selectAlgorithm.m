@@ -1,20 +1,20 @@
-function [id] = selectAlgorithm(algSelector)
+function [id] = selectAlgorithm(algSel)
   % Selects and borders the alogorithm to be used
   % for a given cell array
-  lenalg = length(algSelector.Alg);
-  display(strcat('Select an algorithm for [',algSelector.Inf,']:'));
+  lenalg = length(algSel.Alg);
+  display(strcat('Select an algorithm for [',algSel.Inf,']:'));
   for i = 1:lenalg
-    display(strcat('ID [',num2str(i),'] >',algSelector.Alg{i}{2}));
+    display(sprintf('%s%s','[',num2str(i),'] > ',algSel.Alg{i}{2}));
   end
-  user = input('Method ID >>','s');
-  user = str2double(user)
+  user = input(strcat('Method ID:',num2str(algSel.Cur),' [',algSel.Alg{i}{2},'] >> '),'s');
+  user = str2double(user);
   if(isnan(user))
     display(strcat('ID [',num2str(user),'] is invalid'));
-    id = algSelector.Cur;
+    id = algSel.Cur;
     return;
   elseif((user < 1) || (user > lenalg))
     display(strcat('ID [',num2str(user),'] not in bounds [1..',num2str(lenalg),']'));
-    id = algSelector.Cur;
+    id = algSel.Cur;
     return;
   else
     user = floor(user);
