@@ -6,6 +6,7 @@
 This repository is actually an old lecture of mine when I was at the university.
 It is basically a discrete real-time FFT mp3 toolbox. Capable to plot the DFT
 as the file is playing. It contains three different DTF algorithms.
+You can see it in action [here](https://www.youtube.com/watch?v=UAKX-qg8xbY).
    
 ### How can I install it ?
 Clone this repository first inside Malab/toolbox.
