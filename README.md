@@ -18,4 +18,4 @@ Type `help openmp3` and if an output is present, you have done it right.
 Type `help openmp3` and it will show you how to use it.
 Open an `*.mp3` file by setting the argument to its path.
 *It will start running. Type `help` to explore additional options
-The function uses the fastest iterative divider DFT algorithm `myfft1` of the all three.**
+The function uses the fastest iterative divider DFT algorithm `fft` of the all three.*
