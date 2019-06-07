@@ -1,0 +1,11 @@
+function []=octave_addpath(sPth)
+  sBas = pwd();
+  addpath(strcat(sBas,'\functions\common'));
+  addpath(strcat(sBas,'\functions\dft'));
+  addpath(strcat(sBas,'\functions\ffts'));
+  addpath(strcat(sBas,'\functions\player'));
+  addpath(strcat(sBas,'\mp3_toolbox'));
+  addpath(strcat(sBas,'\mp3_toolbox\mp3write'));
+  addpath(strcat(sBas,'\mp3_toolbox\mp3reader'));
+end
+  

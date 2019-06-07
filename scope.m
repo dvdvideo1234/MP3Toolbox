@@ -18,36 +18,41 @@ function scope()
     if(length(DevID) == 1), break; end
     if(strcmp(tempch,'q')), return; end
   end
-    rec = audiorecorder(fs,nbits,chans,DevID);
-    rec.Tag = 'Sampled signal';
-    keep('rec')
+  rec = audiorecorder(fs,nbits,chans,DevID);
+  rec.Tag = 'Sampled signal';
+  keep('rec')
   if(isempty(get(0,'CurrentFigure')))
     fig = 1;
   else
     fig = max(get(0,'Children')) + 1;
   end
+  figure(fig);
   while(1)
-    figure(fig)
-    if(~ishandle(fig))
+    if(ishandle(fig) == 0)
       break;
     else
       record(rec);
-      delay(2000)
+      delay(2000);
       stop(rec);
       y = getaudiodata(rec);
       ylen = length(y);
-      df = rec.SampleRate/ylen;
-      f = abs(fft(y.*[blackman(ylen), blackman(ylen)]));
-      f = matsat(f(1:floor(ylen/2),:),[0,30]);
-      xy = (0:df/ylen:df-df/ylen)';
-      xf = (0:df:rec.SampleRate/2-df)';
-      subplot(2,1,1), plot(xy,y(:,1),xy,y(:,2)), ylim([-1 1]), xlim([0,df-df/ylen])
-      xlabel('Time in 100 th of second'), ylabel('Value'), grid
-      subplot(2,1,2), plot(xf,f(:,1),xf,f(:,2)), ylim([0 30]), xlim([0,rec.SampleRate/2])
-      xlabel('Frequency [Hz]'), ylabel('|X(n)|'), grid
+      if(ylen > 0)
+        figure(fig)
+        df = rec.SampleRate/ylen;
+        win = blackman(ylen);
+        f = abs(fft(y.*[win, win]));
+        f = matsat(f(1:floor(ylen/2),:),[0,30]);
+        xy = (0:df/ylen:df-df/ylen)';
+        xf = (0:df:rec.SampleRate/2-df)';
+        subplot(2,1,1), plot(xy,y(:,1),xy,y(:,2)), ylim([-1 1]), xlim([0,df-df/ylen]);
+        xlabel('Time in 100 th of second'), ylabel('Value'), grid;
+        subplot(2,1,2), plot(xf,f(:,1),xf,f(:,2)), ylim([0 30]), xlim([0,rec.SampleRate/2]);
+        xlabel('Frequency [Hz]'), ylabel('|X(n)|'), grid;
+      else
+        disp(strcat('Sampled signal length is :',num2str(ylen)));
+      end
     end
   end
-    if(sum(fig*ones(size(get(0,'Children'))) == get(0,'Children'))), close(fig), end
-    return
-  end
+  if(sum(fig*ones(size(get(0,'Children'))) == get(0,'Children'))), close(fig), end
+  return
 end

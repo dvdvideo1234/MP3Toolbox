@@ -38,73 +38,73 @@ function [] = openmp3(path_mp3)
   %  10) "help" - Displays ferther command help
   % PLAyER made by dvd_video
   clc
-  % Load DFT algorithms
+  % Load DFT algorithms. These cells contain function names processed via str2func
   DFT.Devices  = audiodevinfo;
   DFT.Calc.Cur = 1;
   DFT.Calc.Inf = 'DFT calculator';
-  DFT.Calc.Alg = {
-    { @fft      , 'Default integrated'              }
-    { @fftVector, 'Vector-Matrix iterative'         }
-    { @fftRadix , 'Coukey-Turkey from the textbook' }
-    { @fftRecurs, 'Recursive using odd and even'    }
-  };
+  DFT.Calc.Alg = registerFunctionList({
+    { 'fft      ', 'Default integrated'              }
+    { 'fftVector', 'Vector-Matrix iterative'         }
+    { 'fftRadix ', 'Coukey-Turkey from the textbook' }
+    { 'fftRecurs', 'Recursive using odd and even'    }
+  });
   % Plots help: http://www.mathworks.com/help/matlab/creating_plots/types-of-matlab-plots.html
   % Load 3D plots ( Size of the window, Points count, Memorized DFT count, Label )
   DFT.Plot3D.Cur = 1; % The current selected plotter
   DFT.Plot3D.Inf = '3D data plotter';
-  DFT.Plot3D.Alg =  {
-    { @surf     , 'Surface graph'         , 40, 512 , 15 }
-    { @surfc    , 'Surface contour graph' , 40, 512 , 15 }
-    { @surfl    , 'Surface colormap graph', 40, 512 , 15 }
-    { @surfnorm , 'Surface normals graph' , 40, 512 , 15 }
-    { @mesh     , 'Mesh graph'            , 40, 128 , 10 }
-    { @meshc    , 'Mesh contour graph'    , 40, 128 , 10 }
-    { @meshz    , 'Mesh curtain graph'    , 40, 128 , 10 }
-    { @waterfall, 'Waterfall graph'       , 40, 128 , 6  }
-    { @ribbon   , 'Ribbon graph'          , 40, 128 , 6  }
-    { @contour3 , 'Contour 3D graph'      , 40, 128 , 6  }
-    { @contour  , 'Contour graph'         , 40, 128 , 6  }
-    { @bar3     , 'Bar graph'             , 40, 128 , 6  }
-    { @stem3    , 'Stem 3D graph'         , 40, 128 , 6  }
-  };
+  DFT.Plot3D.Alg =  registerFunctionList({
+    { 'surf     ', 'Surface graph'         , 40, 512 , 15 }
+    { 'surfc    ', 'Surface contour graph' , 40, 512 , 15 }
+    { 'surfl    ', 'Surface colormap graph', 40, 512 , 15 }
+    { 'surfnorm ', 'Surface normals graph' , 40, 512 , 15 }
+    { 'mesh     ', 'Mesh graph'            , 40, 128 , 10 }
+    { 'meshc    ', 'Mesh contour graph'    , 40, 128 , 10 }
+    { 'meshz    ', 'Mesh curtain graph'    , 40, 128 , 10 }
+    { 'waterfall', 'Waterfall graph'       , 40, 128 , 6  }
+    { 'ribbon   ', 'Ribbon graph'          , 40, 128 , 6  }
+    { 'contour3 ', 'Contour 3D graph'      , 40, 128 , 6  }
+    { 'contour  ', 'Contour graph'         , 40, 128 , 6  }
+    { 'bar3     ', 'Bar graph'             , 40, 128 , 6  }
+    { 'stem3    ', 'Stem 3D graph'         , 40, 128 , 6  }
+  });
   % Load 2D plots ( Size of the window, Points count, Label )
   DFT.Plot2D.Cur = 1; % The current selected plotter
   DFT.Plot2D.Inf = '2D data plotter';
-  DFT.Plot2D.Alg = {
-    { @plot     , 'Plot graph'          , 40, 2048 }
-    { @stairs   , 'Stairs graph'        , 40, 2048 }
-    { @loglog   , 'Logarithmic XY graph', 40, 2048 }
-    { @semilogx , 'Logarithmic X graph' , 40, 2048 }
-    { @semilogy , 'Logarithmic Y graph' , 40, 2048 }
-    { @area     , 'Area graph'          , 40, 2048 }
-    { @pie      , 'Pie 2D graph'        , 40, 2048 }
-    { @pie3     , 'Pie 3D graph'        , 40, 2048 }
-    { @bar      , 'Bar graph'           , 40, 2048 }
-    { @stem     , 'Stem graph'          , 40, 2048 }
-    { @histogram, 'Histogram graph'     , 40, 2048 }
-  };
+  DFT.Plot2D.Alg = registerFunctionList({
+    { 'plot     ', 'Plot graph'          , 40, 2048 }
+    { 'stairs   ', 'Stairs graph'        , 40, 2048 }
+    { 'loglog   ', 'Logarithmic XY graph', 40, 2048 }
+    { 'semilogx ', 'Logarithmic X graph' , 40, 2048 }
+    { 'semilogy ', 'Logarithmic Y graph' , 40, 2048 }
+    { 'area     ', 'Area graph'          , 40, 2048 }
+    { 'pie      ', 'Pie 2D graph'        , 40, 2048 }
+    { 'pie3     ', 'Pie 3D graph'        , 40, 2048 }
+    { 'bar      ', 'Bar graph'           , 40, 2048 }
+    { 'stem     ', 'Stem graph'          , 40, 2048 }
+    { 'histogram', 'Histogram graph'     , 40, 2048 }
+  });
   % Load a list of windows
   DFT.Wind.Cur = 1; % The current selected plotter
   DFT.Wind.Inf = 'Signal window';
-  DFT.Wind.Alg = {
-    { @barthannwin   , 'Barthann'      }
-    { @bartlett      , 'Bartlett'      }
-    { @blackman      , 'Blackman'      }
-    { @blackmanharris, 'Blackmanharris'}
-    { @bohmanwin     , 'Bohman'        }
-    { @chebwin       , 'Chebishev'     }
-    { @flattopwin    , 'Flattop'       }
-    { @gausswin      , 'Gaussian'      }
-    { @hamming       , 'Hamming '      }
-    { @hann          , 'Hann'          }
-    { @kaiser        , 'Kaiser'        }
-    { @nuttallwin    , 'Nuttall'       }
-    { @parzenwin     , 'Parzen'        }
-    { @rectwin       , 'Rectangle'     }
-    { @taylorwin     , 'Taylor'        }
-    { @triang        , 'Triangular'    }
-    { @tukeywin      , 'Tukeywin'      }
-  };
+  DFT.Wind.Alg = registerFunctionList({
+    { 'barthannwin   ', 'Barthann'      }
+    { 'bartlett      ', 'Bartlett'      }
+    { 'blackman      ', 'Blackman'      }
+    { 'blackmanharris', 'Blackmanharris'}
+    { 'bohmanwin     ', 'Bohman'        }
+    { 'chebwin       ', 'Chebishev'     }
+    { 'flattopwin    ', 'Flattop'       }
+    { 'gausswin      ', 'Gaussian'      }
+    { 'hamming       ', 'Hamming '      }
+    { 'hann          ', 'Hann'          }
+    { 'kaiser        ', 'Kaiser'        }
+    { 'nuttallwin    ', 'Nuttall'       }
+    { 'parzenwin     ', 'Parzen'        }
+    { 'rectwin       ', 'Rectangle'     }
+    { 'taylorwin     ', 'Taylor'        }
+    { 'triang        ', 'Triangular'    }
+    { 'tukeywin      ', 'Tukeywin'      }
+  });
   DFT.Dummy             = 0;
   DFT.Object            = 0;
   DFT.Path              = path_mp3;
