@@ -1,7 +1,7 @@
 function [out] = registerFunctionList(nam, in)
   out.Inf = nam;
   out.Cur = 1;
-  out.Alg = {}
+  out.Alg = {};
   cnt = 0;
   flg = 0;
   foo = 0;

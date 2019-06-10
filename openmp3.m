@@ -3,7 +3,7 @@ function [] = openmp3(path_mp3)
   %Prototype in c++ :
   %                     void openmp3(char *file_path_including_name)
   %
-  % Works also with Drag-Drop file to the ML command window and duble click
+  % Works also with Drag-Drop file to the ML command window and double click
   % in the current directory on the *.mp3  file.
   %
   % Example:
@@ -19,7 +19,7 @@ function [] = openmp3(path_mp3)
   % *.mp3 files for listening them and experimenting with different DFT
   % algorithms, windows and plotters in real time
   %   This code has a menu for
-  %   1) "seek"      - Seek the file in percents
+  %   1) "seek"      - Seek the file in percent
   %   2) "rate"      - Changing sampling rate of the audio player
   %   3) "p","r","s" - Pause Resume and Stop the processing
   %   4) "o"         - Open another file
@@ -27,15 +27,15 @@ function [] = openmp3(path_mp3)
   %      "c" - Plot the signal and DFT with the 2D graph selected
   %      "s" - Mesh the signal and DFT with the 3D graph selected
   %      "dft" - Selects a different DFT algorithm to be used
-  %      "win" - Selects a window to weighten the samples
-  %   6) "info"  - Audioplayer information
+  %      "win" - Selects a window to weighted the samples
+  %   6) "info"  - Audio player information
   %   7) "clc"   - Clear screen
   %   8) "dir"   - View current workspace directory
-  %   9) "plist" - Playlist
+  %   9) "plist" - Play list
   %    "add" - Adds a file for processing
-  %    "rem" - Removes a file from playlist
+  %    "rem" - Removes a file from play list
   %    "sel" - Selects a file for processing
-  %  10) "help" - Displays ferther command help
+  %  10) "help" - Displays further command help
   % PLAyER made by dvd_video
   clc
   % Load DFT algorithms. These cells contain function names processed via str2func
@@ -54,19 +54,19 @@ function [] = openmp3(path_mp3)
   % Load 3D plots ( Size of the window, Points count, Memorized DFT count, Label )
   % The current selected plotter
   DFT.Plot3D =  registerFunctionList('3D data plotter', {
-    { 'surf     ', 'Surface graph'         , 40, 512 , 15 }
-    { 'surfc    ', 'Surface contour graph' , 40, 512 , 15 }
-    { 'surfl    ', 'Surface colormap graph', 40, 512 , 15 }
-    { 'surfnorm ', 'Surface normals graph' , 40, 512 , 15 }
-    { 'mesh     ', 'Mesh graph'            , 40, 128 , 10 }
-    { 'meshc    ', 'Mesh contour graph'    , 40, 128 , 10 }
-    { 'meshz    ', 'Mesh curtain graph'    , 40, 128 , 10 }
-    { 'waterfall', 'Waterfall graph'       , 40, 128 , 6  }
-    { 'ribbon   ', 'Ribbon graph'          , 40, 128 , 6  }
-    { 'contour3 ', 'Contour 3D graph'      , 40, 128 , 6  }
-    { 'contour  ', 'Contour graph'         , 40, 128 , 6  }
-    { 'bar3     ', 'Bar graph'             , 40, 128 , 6  }
-    { 'stem3    ', 'Stem 3D graph'         , 40, 128 , 6  }
+    { 'surf     ', 'Surface graph'          , 40, 512 , 15 }
+    { 'surfc    ', 'Surface contour graph'  , 40, 512 , 15 }
+    { 'surfl    ', 'Surface color map graph', 40, 512 , 15 }
+    { 'surfnorm ', 'Surface normals graph'  , 40, 512 , 15 }
+    { 'mesh     ', 'Mesh graph'             , 40, 128 , 10 }
+    { 'meshc    ', 'Mesh contour graph'     , 40, 128 , 10 }
+    { 'meshz    ', 'Mesh curtain graph'     , 40, 128 , 10 }
+    { 'bar3     ', 'Bar graph'              , 40, 128 , 10 }
+    { 'waterfall', 'Waterfall graph'        , 40, 128 , 6  }
+    { 'ribbon   ', 'Ribbon graph'           , 40, 128 , 6  }
+    { 'contour3 ', 'Contour 3D graph'       , 40, 128 , 6  }
+    { 'contour  ', 'Contour graph'          , 40, 128 , 6  }
+    { 'stem3    ', 'Stem 3D graph'          , 40, 128 , 6  }
   });
   if(DFT.Plot3D.Siz <= 0)
     display(strcat('Cannot initialize: <',DFT.Plot3D.Inf,'>'))
@@ -75,17 +75,18 @@ function [] = openmp3(path_mp3)
   % Load 2D plots ( Size of the window, Points count, Label )
   % The current selected plotter
   DFT.Plot2D = registerFunctionList('2D data plotter', {
-    { 'plot     ', 'Plot graph'          , 40, 2048 }
-    { 'stairs   ', 'Stairs graph'        , 40, 2048 }
-    { 'loglog   ', 'Logarithmic XY graph', 40, 2048 }
-    { 'semilogx ', 'Logarithmic X graph' , 40, 2048 }
-    { 'semilogy ', 'Logarithmic Y graph' , 40, 2048 }
-    { 'area     ', 'Area graph'          , 40, 2048 }
-    { 'pie      ', 'Pie 2D graph'        , 40, 2048 }
-    { 'pie3     ', 'Pie 3D graph'        , 40, 2048 }
-    { 'bar      ', 'Bar graph'           , 40, 2048 }
-    { 'stem     ', 'Stem graph'          , 40, 2048 }
-    { 'histogram', 'Histogram graph'     , 40, 2048 }
+    { 'plot     ', 'Plot graph'           , 40, 2048 }
+    { 'stairs   ', 'Stairs graph'         , 40, 2048 }
+    { 'loglog   ', 'Logarithmic XY graph' , 40, 2048 }
+    { 'semilogx ', 'Logarithmic X graph'  , 40, 2048 }
+    { 'semilogy ', 'Logarithmic Y graph'  , 40, 2048 }
+    { 'area     ', 'Area graph'           , 40, 2048 }
+    { 'pie      ', 'Pie 2D graph'         , 40, 2048 }
+    { 'pie3     ', 'Pie 3D graph'         , 40, 2048 }
+    { 'bar      ', 'Bar graph'            , 40, 2048 }
+    { 'stem     ', 'Stem graph'           , 40, 2048 }
+    { 'hist     ', 'Histogram graph (new)', 40, 2048 }
+    { 'histogram', 'Histogram graph (old)', 40, 2048 }
   });
   if(DFT.Plot2D.Siz <= 0)
     display(strcat('Cannot initialize: <',DFT.Plot2D.Inf,'>'))
@@ -140,7 +141,7 @@ function [] = openmp3(path_mp3)
     if(~isempty(err.message))
       display(strcat('File invalid:',DFT.Path))
       display(strcat('Error:',err.message))
-      display('Atleast first open file should be valid !!!')
+      display('At least first open file should be valid !!!')
       return;
     end
   end
@@ -205,7 +206,7 @@ function [] = openmp3(path_mp3)
                 || ((DFT.UserInput < 0) && (DFT.Object.SampleRate+DFT.UserInput > 0)))
                 pause(DFT.Object);
                 DFT.Object.SampleRate = DFT.Object.SampleRate + DFT.UserInput;
-                resume(mp3);
+                resume(DFT.Object);
               end
             end
          end
