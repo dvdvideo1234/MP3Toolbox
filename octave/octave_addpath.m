@@ -1,5 +1,7 @@
 function []=octave_addpath(sPth)
-  sBas = pwd();
+  sBas = strrep(pwd(),'\octave','');
+  %----------------------------------------%
+  addpath(strcat(sBas,'\octave'));
   addpath(strcat(sBas,'\functions\common'));
   addpath(strcat(sBas,'\functions\dft'));
   addpath(strcat(sBas,'\functions\ffts'));

@@ -40,19 +40,20 @@ function [] = openmp3(path_mp3)
   clc
   % Load DFT algorithms. These cells contain function names processed via str2func
   DFT.Devices  = audiodevinfo;
-  DFT.Calc.Cur = 1;
-  DFT.Calc.Inf = 'DFT calculator';
-  DFT.Calc.Alg = registerFunctionList({
+  DFT.Calc = registerFunctionList('DFT calculator', {
     { 'fft      ', 'Default integrated'              }
     { 'fftVector', 'Vector-Matrix iterative'         }
     { 'fftRadix ', 'Coukey-Turkey from the textbook' }
     { 'fftRecurs', 'Recursive using odd and even'    }
   });
+  if(DFT.Calc.Siz <= 0)
+    display(strcat('Cannot initialize: <',DFT.Calc.Inf,'>'))
+    return;
+  end
   % Plots help: http://www.mathworks.com/help/matlab/creating_plots/types-of-matlab-plots.html
   % Load 3D plots ( Size of the window, Points count, Memorized DFT count, Label )
-  DFT.Plot3D.Cur = 1; % The current selected plotter
-  DFT.Plot3D.Inf = '3D data plotter';
-  DFT.Plot3D.Alg =  registerFunctionList({
+  % The current selected plotter
+  DFT.Plot3D =  registerFunctionList('3D data plotter', {
     { 'surf     ', 'Surface graph'         , 40, 512 , 15 }
     { 'surfc    ', 'Surface contour graph' , 40, 512 , 15 }
     { 'surfl    ', 'Surface colormap graph', 40, 512 , 15 }
@@ -67,10 +68,13 @@ function [] = openmp3(path_mp3)
     { 'bar3     ', 'Bar graph'             , 40, 128 , 6  }
     { 'stem3    ', 'Stem 3D graph'         , 40, 128 , 6  }
   });
+  if(DFT.Plot3D.Siz <= 0)
+    display(strcat('Cannot initialize: <',DFT.Plot3D.Inf,'>'))
+    return;
+  end
   % Load 2D plots ( Size of the window, Points count, Label )
-  DFT.Plot2D.Cur = 1; % The current selected plotter
-  DFT.Plot2D.Inf = '2D data plotter';
-  DFT.Plot2D.Alg = registerFunctionList({
+  % The current selected plotter
+  DFT.Plot2D = registerFunctionList('2D data plotter', {
     { 'plot     ', 'Plot graph'          , 40, 2048 }
     { 'stairs   ', 'Stairs graph'        , 40, 2048 }
     { 'loglog   ', 'Logarithmic XY graph', 40, 2048 }
@@ -83,10 +87,13 @@ function [] = openmp3(path_mp3)
     { 'stem     ', 'Stem graph'          , 40, 2048 }
     { 'histogram', 'Histogram graph'     , 40, 2048 }
   });
+  if(DFT.Plot2D.Siz <= 0)
+    display(strcat('Cannot initialize: <',DFT.Plot2D.Inf,'>'))
+    return;
+  end
   % Load a list of windows
-  DFT.Wind.Cur = 1; % The current selected plotter
-  DFT.Wind.Inf = 'Signal window';
-  DFT.Wind.Alg = registerFunctionList({
+  % The current selected plotter
+  DFT.Wind = registerFunctionList('Signal window', {
     { 'barthannwin   ', 'Barthann'      }
     { 'bartlett      ', 'Bartlett'      }
     { 'blackman      ', 'Blackman'      }
@@ -105,6 +112,10 @@ function [] = openmp3(path_mp3)
     { 'triang        ', 'Triangular'    }
     { 'tukeywin      ', 'Tukeywin'      }
   });
+  if(DFT.Wind.Siz <= 0)
+    display(strcat('Cannot initialize: <',DFT.Wind.Inf,'>'))
+    return;
+  end
   DFT.Dummy             = 0;
   DFT.Object            = 0;
   DFT.Path              = path_mp3;
@@ -146,7 +157,7 @@ function [] = openmp3(path_mp3)
   while(1)
     DFT.UserInput=input('Device ID? >>','s');
     DFT.UserInput = fix(str2double(DFT.UserInput));
-    if(ValuePersistInArray(DFT.UserInput,DFT.DeviceID))
+    if(valuePersistInArray(DFT.UserInput,DFT.DeviceID))
          DFT.DeviceID = (DFT.UserInput == DFT.DeviceID)'*DFT.DeviceID;
     end
     if(length(DFT.DeviceID) == 1), break; end
@@ -156,7 +167,7 @@ function [] = openmp3(path_mp3)
   % Create the audio player and start doing the thing
   DFT.SampleRateDefault = DFT.SampleRate;
   DFT.Object     = audioplayer(DFT.Signal,DFT.SampleRate,DFT.SampleBits,DFT.DeviceID);
-  DFT.Object.tag = slashstringn(DFT.Path,length(DFT.Path));
+  DFT.Object.Tag = slashstringn(DFT.Path,length(DFT.Path));
   stop(DFT.Object)
   dispMp3Info(DFT.Format,DFT.Object);
   play(DFT.Object);
@@ -170,7 +181,7 @@ function [] = openmp3(path_mp3)
       DFT.Signal     = fixInputin2Col(DFT.Signal);
       DFT.SampleRateDefault = DFT.SampleRate;
       DFT.Object     = audioplayer(DFT.Signal,DFT.SampleRate,DFT.SampleBits,DFT.DeviceID);
-      DFT.Object.tag = slashstringn(DFT.Path,length(DFT.Path));
+      DFT.Object.Tag = slashstringn(DFT.Path,length(DFT.Path));
       clc;
       dispMp3Info(DFT.Format,DFT.Object);
       play(DFT.Object);
@@ -300,7 +311,7 @@ function [] = openmp3(path_mp3)
               [DFT.Signal,DFT.SampleRate,DFT.SampleBits,DFT.Format] = mp3read(DFT.Path);
               DFT.Signal     = fixInputin2Col(DFT.Signal);
               DFT.Object     = audioplayer(DFT.Signal,DFT.SampleRate,DFT.SampleBits,DFT.DeviceID);
-              DFT.Object.tag = slashstringn(DFT.Path,length(DFT.Path));
+              DFT.Object.Tag = slashstringn(DFT.Path,length(DFT.Path));
               clc
               dispMp3Info(DFT.Format,DFT.Object);
               play(DFT.Object);
