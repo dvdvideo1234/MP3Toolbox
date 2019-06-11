@@ -15,8 +15,8 @@ function [] = openmp3(path_mp3)
   %  and *.mp3 extension is added at the end automatically
   %
   % This function uses "mp3read()" I didn't make it. It was made
-  % by Alfredo Fernandez. I only made the player itself, so you can open
-  % *.mp3 files for listening them and experimenting with different DFT
+  % by Alfredo Fernandez or Dan Ellis. I only made the player itself, so you
+  % can open *.mp3 files for listening them and experimenting with different DFT
   % algorithms, windows and plotters in real time
   %   This code has a menu for
   %   1) "seek"      - Seek the file in percent

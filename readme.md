@@ -21,11 +21,13 @@ Open an `*.mp3` file by setting the argument to its path.
 The function uses the fastest iterative divider DFT algorithm `fft` of the all three.*
 
 ### Thanks and dependencies
-This program used `mp3read` and `mp3write`. I did not make these finctons. They were
+This program uses `mp3read` and `mp3write`. I did not make these finctons. They were
 made by [Alfredo Fernandez][ref-af] or [Dan Ellis][ref-de] from the [Mathworks community file exchange program][ref-file].
 The repository contains this dependency. [The player is entirely my thing][ref-play].
+Currently [Dan's implementation][ref-html] is chosen due to the multi-platform support.
 
 [ref-file]: https://www.mathworks.com/matlabcentral/fileexchange/
 [ref-af]: https://www.mathworks.com/matlabcentral/fileexchange/6152-mp3write-and-mp3read
 [ref-play]: https://www.mathworks.com/matlabcentral/fileexchange/63764-console-mp3-player-and-dft-plotter?s_tid=prof_contriblnk
 [ref-de]:https://www.mathworks.com/matlabcentral/fileexchange/13852-mp3read-and-mp3write
+[ref-html]: http://htmlpreview.github.io/?https://raw.githubusercontent.com/dvdvideo1234/MP3Toolbox/master/functions/mp3readwrite/html/demo_mp3readwrite.html

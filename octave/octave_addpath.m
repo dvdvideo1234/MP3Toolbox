@@ -6,8 +6,6 @@ function [] = octave_addpath()
   addpath(strcat(base,'\functions\dft'));
   addpath(strcat(base,'\functions\ffts'));
   addpath(strcat(base,'\functions\player'));
-  addpath(strcat(base,'\mp3_toolbox'));
-  addpath(strcat(base,'\mp3_toolbox\mp3write'));
-  addpath(strcat(base,'\mp3_toolbox\mp3reader'));
+  addpath(strcat(base,'\functions\mp3readwrite'));
 end
   
