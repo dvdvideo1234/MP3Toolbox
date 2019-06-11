@@ -24,11 +24,11 @@ function [] = drawCurvDFT(fnDFT, fnWind, plyAud, smpSig, fhDraw, namDFT, maxSig,
   brdm = [0 maxSig];
   brdf = [0 plyAud.SampleRate/2];
   brds = [-1 1];
+  figure(fig);
   while((plyAud.CurrentSample < plyAud.TotalSamples) && (plyAud.CurrentSample ~= 1))
-    figure(fig)
     if(~ishandle(fig))
       break;
-    elseif(plyAud.CurrentSample > lenDFT)
+    elseif(plyAud.CurrentSample > lenDFT) figure(fig);
       left = smpSig(plyAud.CurrentSample-lenDFT:plyAud.CurrentSample,1);
       righ = smpSig(plyAud.CurrentSample-lenDFT:plyAud.CurrentSample,2);
       ft(:,1)=fnDFT(left(1:lenDFT).*wind);

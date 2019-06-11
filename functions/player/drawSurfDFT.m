@@ -24,10 +24,11 @@ function [] = drawSurfDFT(fhDFT, fnWind, plyAud, smpSig, fhDraw, namDFT, maxSig,
   brdm = [0 maxSig];
   brdf = [1 falDFT];
   brdh = [0 half];
+  figure(fig);
   while((plyAud.CurrentSample < plyAud.TotalSamples) && (plyAud.CurrentSample ~= 1))
-    figure(fig)
-    if(~ishandle(fig)) break;
-    elseif(plyAud.CurrentSample > lenDFT)
+    if(~ishandle(fig))
+      break;
+    elseif(plyAud.CurrentSample > lenDFT) figure(fig);
       left = smpSig(plyAud.CurrentSample-lenDFT:plyAud.CurrentSample,1);
       righ = smpSig(plyAud.CurrentSample-lenDFT:plyAud.CurrentSample,2);
       left = left(1:lenDFT);
