@@ -1,4 +1,4 @@
-function []=octave_addpath(sPth)
+function []=addpath(sPth)
   sBas = strrep(pwd(),'\octave','');
   %----------------------------------------%
   addpath(strcat(sBas,'\octave'));
