@@ -18,11 +18,10 @@ function [] = drawCurvDFT(fnDFT, fnWind, plyAud, smpSig, fhDraw, namDFT, maxSig,
   df   = plyAud.SampleRate/lenDFT;
   freq = (1:1:lenDFT) * df;
   freq = freq(1:half);
-  fig  = getNextFigure();
   brdm = [0 maxSig];
   brdf = [0 plyAud.SampleRate/2];
   brds = [-1 1];
-  figure(fig);
+  fig  = figure(getNextFigure()); set(fig, 'name', 'Curve graph');
   while((plyAud.CurrentSample < plyAud.TotalSamples) && (plyAud.CurrentSample ~= 1))
     if(~ishandle(fig))
       break;

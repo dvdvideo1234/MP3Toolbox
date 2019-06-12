@@ -19,12 +19,11 @@ function [] = drawSurfDFT(fhDFT, fnWind, plyAud, smpSig, fhDraw, namDFT, maxSig,
   ftl  = zeros(half,falDFT);
   ftr  = zeros(half,falDFT);
   df   = strcat(num2str(floor(plyAud.SampleRate/lenDFT)),'n','[Hz]');
-  fig  = getNextFigure();
   brdv = [-130 20];
   brdm = [0 maxSig];
   brdf = [1 falDFT];
   brdh = [0 half];
-  figure(fig);
+  fig  = figure(getNextFigure()); set(fig, 'name', 'Surface graph');
   while((plyAud.CurrentSample < plyAud.TotalSamples) && (plyAud.CurrentSample ~= 1))
     if(~ishandle(fig))
       break;
