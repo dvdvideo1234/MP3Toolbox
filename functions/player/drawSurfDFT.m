@@ -13,7 +13,7 @@ function [] = drawSurfDFT(fhDFT, fnWind, plyAud, smpSig, fhDraw, namDFT, maxSig,
   % falDFT - How many DFT are displayed in the matrix back in time ( fall behind )
   % maxSig - The maximum saturation value for the signal
   % namDFT - The name of the subplots of DFT
-  if(lenDFT <= 0) return; end
+  if(lenDFT <= 0) return; end  
   half = floor(lenDFT/2);
   wind = fnWind(lenDFT);
   ftl  = zeros(half,falDFT);
@@ -46,7 +46,7 @@ function [] = drawSurfDFT(fhDFT, fnWind, plyAud, smpSig, fhDraw, namDFT, maxSig,
       subplot(2,2,3), fhDraw(ftl), title(namDFT), xlabel('SampleTime'),...
       ylabel(df), zlabel('|X(n)|'), ylim(brdh), xlim(brdf), zlim(brdm), view(brdv), grid
       subplot(2,2,4), fhDraw(ftr), title(namDFT), xlabel('SampleTime'),...
-      ylabel(df), zlabel('|X(n)|'), ylim(brdh), xlim(brdf), zlim(brdm), view(brdv), grid
+      ylabel(df), zlabel('|X(n)|'), ylim(brdh), xlim(brdf), zlim(brdm), view(brdv), grid, drawnow
     end
   end
   endNextFigure(fig);

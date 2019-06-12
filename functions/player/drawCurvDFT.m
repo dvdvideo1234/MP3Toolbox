@@ -12,9 +12,7 @@ function [] = drawCurvDFT(fnDFT, fnWind, plyAud, smpSig, fhDraw, namDFT, maxSig,
   % lenDFT - The number of points the DFT is calcolated for, the higher, the accurate
   % maxSig - The maximum saturation value for the signal
   % namDFT - The name of the subplots of DFT
-  if(lenDFT <= 0)
-    return;
-  end
+  if(lenDFT <= 0) return; end
   half = floor(lenDFT/2);
   wind = fnWind(lenDFT);
   df   = plyAud.SampleRate/lenDFT;
@@ -41,7 +39,7 @@ function [] = drawCurvDFT(fnDFT, fnWind, plyAud, smpSig, fhDraw, namDFT, maxSig,
       subplot(2,2,3), fhDraw(freq,ftt(:,1)), title(namDFT),xlim(brdf),ylim(brdm),
       xlabel('Frequency'), ylabel('|X(n)|'), grid
       subplot(2,2,4), fhDraw(freq,ftt(:,2)), title(namDFT),xlim(brdf),ylim(brdm),
-      xlabel('Frequency'), ylabel('|X(n)|'), grid
+      xlabel('Frequency'), ylabel('|X(n)|'), grid, drawnow
     end
   end
   endNextFigure(fig);
