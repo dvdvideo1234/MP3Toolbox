@@ -1,4 +1,4 @@
-function [] = octave_addpath()
+function [] = setup_mp3_toolbox()
   base = strrep(pwd(),'\octave','');
   %----------------------------------------%
   addpath(strcat(base,'\octave'));
