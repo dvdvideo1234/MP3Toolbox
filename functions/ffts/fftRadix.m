@@ -7,9 +7,9 @@ function [F, s] = fftRadix(f, b)
   % F - DFT complex array output row ot column
   % s - The status when creating the butterflies
   % b - Enable status calculation ( disabed by default )
-  %
-  % Example: [F, s] = fftRadix(f, b) 
-  %
+  % Example:
+  % F = fftVector([1 2 3 4]', 1)
+  % 
   % F =
   %  10.0000     
   %  -2.0000 - 2.0000i
