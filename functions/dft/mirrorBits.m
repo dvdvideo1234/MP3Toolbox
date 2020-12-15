@@ -1,4 +1,4 @@
-function [out] = mirrorBits(num,b)
+function [out] = mirrorBits(num, b)
   % Mirrorizes a number in "b" bits, 
   % using bitwise operations
   % [1 1 0] --> [0 1 1]

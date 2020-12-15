@@ -1,13 +1,14 @@
-function [F,s] = fftRadix(f) 
+function [F, s] = fftRadix(f, b) 
   % Returns same dimension as it gets
   % The function calculates DFT 
   % using well known Cooley-Turkey 
   % algorithm on N-doted signal where:
-  % f - Input signal in row ot column
+  % f - Input signal in row or column
   % F - DFT complex array output row ot column
-  % s - The status when calcolating the butterflies
+  % s - The status when creating the butterflies
+  % b - Enable status calculation ( disabed by default )
   %
-  % Example: [F,s] = fftRadix(f) 
+  % Example: [F, s] = fftRadix(f, b) 
   %
   % F =
   %  10.0000     
@@ -26,48 +27,48 @@ function [F,s] = fftRadix(f)
   %   2   4   2   1  -1
   sz = size(f);
   if(sz(1) > sz(2))
-    f = f';, tf = 1;
-  else
+    f = f'; tf = 1;
+  else % Output row/column when input is row/column
     tf = 0;
-  end   
-  f = addZeros(f); % Fill the extra zeros if not long enough
-  N  = length(f);  % Points count
-  N2 = floor(N/2);  % Butterflies per phase
-  A  = zeros(1,N);  % Rearranged array to store the butterflies
-  T  = zeros(1,N);  % Temporary array to store the butterflies
-  W  = zeros(1,N2); % Array for powers of W
-  % Rearrangements of the input
-  rev = getBitCount(N-1); 
-  for k = 1:N
-    A(k) = f(mirnum(k-1,rev)+1);
   end
-  % p - Current phase
-  % k - Index in reversed array A
-  % l - Index of the other butterfly wing
+  if(nargin < 2)
+    b = 0; % The status caculation is disabled by default
+  end
+  Z = addZeros(f); % Fill the extra zeros if not long enough
+  N = length(Z);  % Points count on a matter of power two
+  A = zeros(1,N);  % Rearranged array to store the butterflies
+  T = zeros(1,N);  % Temporary array to store the butterflies
+  R = getBitCount(N - 1); % Rearrangements of the input
+  for k = 1:N
+    A(k) = Z(mirrorBits(k - 1, R) + 1);
+  end
+  % r - Current phase for the data length
+  % v - Index in reversed array A
+  % u - Index of the other butterfly wing
   % f - Index of W values
-  m = 1 ; % Bitmask for the current phase
+  m = 1; % Bitmask for the current phase
   s = []; % Debug status matrix 
-  for p = 1:rev
-    for k = 1:N 
+  for r = 1:R
+    for v = 1:N 
       % Generation of T in phase p
-      f = bitand(k-1,m-1);
-      if(bitand(m,k-1))
-        l = k - m;
-        T(k)= A(l)-getW(f,2^p)*A(k);
-        c = -1;
+      f = bitand(v-1, m-1);
+      if(bitand(m, v-1))
+        c = -1; u = v + c * m;
+        T(v)= A(u) + c * getW(f, 2^r) * A(v);
       else
-        l = k + m;
-        T(k)= A(k)+getW(f,2^p)*A(l);
-        c = 1;
+        c =  1; u = v + c * m;
+        T(v)= A(v) + c * getW(f, 2^r) * A(u);
       end
-      s = [s;[p m k l f c]];
+      if(b)
+        s = [s; [r m v u f c]];
+      end
     end 
     A = T;
-    m = bitshift(m,1); 
+    m = bitshift(m, 1); 
   end
   if(tf)
     F = A';
-  else
+  else % Output row/column when input is row/column
     F = A;
   end
 end

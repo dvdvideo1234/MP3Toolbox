@@ -28,20 +28,20 @@ function [] = openmp3(path_mp3)
   %      "s" - Mesh the signal and DFT with the 3D graph selected
   %      "dft" - Selects a different DFT algorithm to be used
   %      "win" - Selects a window to weighted the samples
-  %   6) "info"  - Audio player information
-  %   7) "clc"   - Clear screen
-  %   8) "dir"   - View current workspace directory
-  %   9) "plist" - Play list
-  %    "add" - Adds a file for processing
-  %    "rem" - Removes a file from play list
-  %    "sel" - Selects a file for processing
+  %   6) "info" - Audio player information
+  %   7) "clc"  - Clear screen
+  %   8) "dir"  - View current workspace directory
+  %   9) "pl"   - Play list
+  %      "add" - Adds a file for processing
+  %      "rem" - Removes a file from play list
+  %      "sel" - Selects a file for processing
   %  10) "help" - Displays further command help
   % PLAyER made by dvd_video
   clc
   % Load DFT algorithms. These cells contain function names processed via str2func
   DFT.Devices  = audiodevinfo;
   DFT.Calc = registerFunctionList('DFT calculator', {
-    { 'fft      ', 'Default integrated'              }
+    { 'fft      ', 'Default matlab integrated'       }
     { 'fftVector', 'Vector-Matrix iterative'         }
     { 'fftRadix ', 'Coukey-Turkey from the textbook' }
     { 'fftRecurs', 'Recursive using odd and even'    }
@@ -156,7 +156,7 @@ function [] = openmp3(path_mp3)
   end
   display(' ');
   while(1)
-    DFT.UserInput=input('Device ID? >>','s');
+    DFT.UserInput=input('Device ID? >> ','s');
     DFT.UserInput = fix(str2double(DFT.UserInput));
     if(valuePersistInArray(DFT.UserInput,DFT.DeviceID))
          DFT.DeviceID = (DFT.UserInput == DFT.DeviceID)'*DFT.DeviceID;
@@ -189,12 +189,12 @@ function [] = openmp3(path_mp3)
       continue;
     else
       % Needs waiting for a key
-      DFT.UserInput=input('Command >>','s');
+      DFT.UserInput=input('Command >> ','s');
       switch DFT.UserInput
       case 'save', display('Store selections in a file.');
       case 'p', pause(DFT.Object);
       case 'rate', DFT.Dummy     = num2str(DFT.Object.SampleRate);
-                   DFT.Dummy     = strcat('Command >> Rate = <',DFT.Dummy ,'> >>');
+                   DFT.Dummy     = sprintf('Command >> Rate %sHz >> ', DFT.Dummy);
                    DFT.UserInput = input(DFT.Dummy ,'s');
         switch DFT.UserInput
           case 'd', pause(DFT.Object); DFT.Object.SampleRate=DFT.SampleRateDefault; resume(DFT.Object);
@@ -213,7 +213,7 @@ function [] = openmp3(path_mp3)
        case 'seek'
          DFT.Dummy = percent_q(DFT.Object.CurrentSample,DFT.Object.TotalSamples);
          DFT.Dummy = num2str(DFT.Dummy);
-         DFT.Dummy = strcat('Command >> Seek >',DFT.Dummy,'%< >>');
+         DFT.Dummy = sprintf('Command >> Seek %s%% >> ',DFT.Dummy);
          DFT.UserInput = input(DFT.Dummy,'s');
          switch DFT.UserInput
            case 'b', continue;
@@ -233,7 +233,7 @@ function [] = openmp3(path_mp3)
              stop(DFT.Object);
              play(DFT.Object,[DFT.Dummy DFT.Object.TotalSamples]);
          end
-      case 'v', DFT.UserInput = input('Command >> View >>','s');
+      case 'v', DFT.UserInput = input('Command >> View >> ','s');
         switch DFT.UserInput
           case 'win', DFT.Wind.Cur = selectAlgorithm(DFT.Wind);
           case 'dft', DFT.Calc.Cur = selectAlgorithm(DFT.Calc);
@@ -274,9 +274,9 @@ function [] = openmp3(path_mp3)
                             'v(iew) - Draw signal';...
                             '  (c)urve - 2D, (s)urface - 3D, dft - DFT calcolator, win - Window selction';...
                             'h - Displays this info'});
-      case 'pl', DFT.UserInput = input('Command >> Playlist >>','s');
+      case 'pl', DFT.UserInput = input('Command >> Playlist >> ','s');
         switch DFT.UserInput
-          case 'add', DFT.UserInput = input('Command >> Playlist >> Add >>','s');
+          case 'add', DFT.UserInput = input('Command >> Playlist >> Add >> ','s');
             % Kill the spaces
             DFT.UserInput = killFBSpaces(DFT.UserInput);
             % Normalize the path to be alwayhs full"
@@ -294,7 +294,7 @@ function [] = openmp3(path_mp3)
               end
             end
             DFT.Play.Lst = {DFT.Play.Lst{:,1},DFT.UserInput}';
-          case 'rem', DFT.UserInput = input('Command >> Playlist >> Rem >>','s');
+          case 'rem', DFT.UserInput = input('Command >> Playlist >> Rem >> ','s');
             % Set difference
             DFT.Dummy = floor(str2double(DFT.UserInput));
             if(~(isnan(DFT.Dummy) || (DFT.Dummy < 1) ||...
@@ -302,7 +302,7 @@ function [] = openmp3(path_mp3)
               % Delete the last element
               DFT.Play.Lst(DFT.Dummy) = [];
             end
-          case 'sel', DFT.UserInput=input('Command >> Playlist >> Sel >>','s');
+          case 'sel', DFT.UserInput=input('Command >> Playlist >> Sel >> ','s');
             DFT.Dummy = floor(str2double(DFT.UserInput));
             % Valid item number in the playlist
             if(~(isnan(DFT.Dummy) || (DFT.Dummy < 1) || (DFT.Dummy > length(DFT.Play.Lst))))
@@ -327,7 +327,7 @@ function [] = openmp3(path_mp3)
          end
       case 'o',
         pause(DFT.Object);
-        DFT.UserInput=input('Command >> OpenFile >>','s');
+        DFT.UserInput=input('Command >> OpenFile >> ','s');
         if(DFT.UserInput == 'b')
           resume(DFT.Object);
           continue;
