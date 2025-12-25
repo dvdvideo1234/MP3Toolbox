@@ -1,7 +1,7 @@
 function [] = openmp3(path_mp3)
   %Just type in the Matlab command line "openmp3("HERE STAyS PATH TO THE FILE")"
   %Prototype in c++ :
-  %                     void openmp3(char *file_path_including_name)
+  %                     void openmp3(char *path_mp3)
   %
   % Works also with Drag-Drop file to the ML command window and double click
   % in the current directory on the *.mp3  file.
@@ -9,10 +9,10 @@ function [] = openmp3(path_mp3)
   % Example:
   % These calls are the same, where "path_mp3" is "D:/music/test/test.mp3"
   %
-  %  1: openmp3('D:/music/test/test.mp3') reg. "path_mp3" value target item
-  %  2: openmp3('test.mp3'), note that "test.mp3" is in the current folder
-  %  3: openmp3('test')    , note that "test.mp3" is in the current folder
-  %  and *.mp3 extension is added at the end automatically
+  %  1: openmp3('D:/music/test/test.mp3'), Use the full path target item
+  %  2: openmp3('test.mp3'), Note that "test.mp3" is in the current folder
+  %  3: openmp3('test')    , Note that "test.mp3" is in the current folder
+  %                          and "*.mp3" extension is appended automatically
   %
   % This function uses "mp3read()" I didn't make it. It was made
   % by Alfredo Fernandez or Dan Ellis. I only made the player itself, so you
@@ -81,8 +81,8 @@ function [] = openmp3(path_mp3)
     { 'semilogx ', 'Logarithmic X graph'  , 40, 2048 }
     { 'semilogy ', 'Logarithmic Y graph'  , 40, 2048 }
     { 'area     ', 'Area graph'           , 40, 2048 }
-    { 'pie      ', 'Pie 2D graph'         , 40, 2048 }
-    { 'pie3     ', 'Pie 3D graph'         , 40, 2048 }
+    { 'pie      ', 'Pie 2D graph'         , 40, 64   }
+    { 'pie3     ', 'Pie 3D graph'         , 40, 64   }
     { 'bar      ', 'Bar graph'            , 40, 2048 }
     { 'stem     ', 'Stem graph'           , 40, 2048 }
     { 'hist     ', 'Histogram graph (new)', 40, 2048 }
@@ -240,11 +240,11 @@ function [] = openmp3(path_mp3)
           case 'p',
             DFT.Plot2D.Cur = selectAlgorithm(DFT.Plot2D);
             DFT.Dummy      = DFT.Plot2D.Alg{DFT.Plot2D.Cur};
-            drawCurvDFT(DFT.Calc.Alg{DFT.Calc.Cur}{1}, DFT.Wind.Alg{DFT.Wind.Cur}{1}, DFT.Object, DFT.Signal, DFT.Dummy{1}, DFT.Dummy{2}, DFT.Dummy{3}, DFT.Dummy{4});
+            drawCurvDFT(DFT.Calc.Alg{DFT.Calc.Cur}{1}, DFT.Wind.Alg{DFT.Wind.Cur}{1}, DFT.Object, DFT.Signal, DFT.Dummy);
           case 's',
             DFT.Plot3D.Cur = selectAlgorithm(DFT.Plot3D);
             DFT.Dummy      = DFT.Plot3D.Alg{DFT.Plot3D.Cur};
-            drawSurfDFT(DFT.Calc.Alg{DFT.Calc.Cur}{1}, DFT.Wind.Alg{DFT.Wind.Cur}{1}, DFT.Object, DFT.Signal, DFT.Dummy{1}, DFT.Dummy{2}, DFT.Dummy{3}, DFT.Dummy{4}, DFT.Dummy{5});
+            drawSurfDFT(DFT.Calc.Alg{DFT.Calc.Cur}{1}, DFT.Wind.Alg{DFT.Wind.Cur}{1}, DFT.Object, DFT.Signal, DFT.Dummy);
           case 'b', continue;
           case 'inf', display({
                   'b   - Back';...
