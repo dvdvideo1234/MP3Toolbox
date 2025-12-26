@@ -27,6 +27,7 @@ function [] = drawCurvDFT(fnDFT, fnWind, plyAud, smpSig, cnDraw)
   brdf = [0 plyAud.SampleRate/2];
   brds = [-1 1];
   fig  = figure(getNextFigure()); set(fig, 'name', 'Curve graph');
+  set(fig, 'KeyPressFcn', @keyPressEscapeClose)
   while((plyAud.CurrentSample < plyAud.TotalSamples) && (plyAud.CurrentSample ~= 1))
     if(~ishandle(fig))
       break;
@@ -34,18 +35,18 @@ function [] = drawCurvDFT(fnDFT, fnWind, plyAud, smpSig, cnDraw)
       left = smpSig(plyAud.CurrentSample-lenDFT:plyAud.CurrentSample,1);
       righ = smpSig(plyAud.CurrentSample-lenDFT:plyAud.CurrentSample,2);
       ft(:,1)=fnDFT(left(1:lenDFT).*wind);
-      ft(:,2)=fnDFT(righ(1:lenDFT).*wind);
-      dft = satMatrix(abs(ft(1:half,:)),brdm); %dft = ftt(1:b,:);
+      ft(:,2)=fnDFT(righ(1:lenDFT).*wind);     
+      dft = min(max(abs(ft(1:half,:)), brdm(1)), brdm(2));
       subplot(2,2,1), plot(left), title('Sampled Signal'), xlabel('Sample'),
       ylabel('Value'), xlim([0 lenDFT]), ylim(brds), grid
       subplot(2,2,2), plot(righ), title('Sampled Signal'), xlabel('Sample'),
       ylabel('Value'), xlim([0 lenDFT]), ylim(brds), grid
       try
         subplot(2,2,3), title(namDFT)
-        if all(func(1:3) == 'pie')
+        if strcmp(func(1:3), 'pie')
           fhDraw(dft(:,1))
           xlabel('Frequency'), ylabel('|X(n)|')
-        elseif all(func(1:4) == 'hist')
+        elseif strcmp(func(1:4), 'hist')
           brdf(1, 2) = half;
           fhDraw(dft(:,1)), xlim(brdm), ylim(brdf)
           xlabel('|X(n)|'), ylabel('Frequency')
@@ -55,7 +56,8 @@ function [] = drawCurvDFT(fnDFT, fnWind, plyAud, smpSig, cnDraw)
           xlabel('Frequency'), ylabel('|X(n)|')
         end
         grid
-      catch ex
+      catch
+        ex = lasterror;
         warning(strcat(ex.identifier, ': Function error at [L][',num2str(plyAud.CurrentSample), ']:',ex.message))
         warning('Parameters are exported to the base workspace!');
         assignin('base','ex_F',freq)
@@ -64,10 +66,10 @@ function [] = drawCurvDFT(fnDFT, fnWind, plyAud, smpSig, cnDraw)
       end
       try
         subplot(2,2,4), title(namDFT)
-        if all(func(1:3) == 'pie')
+        if strcmp(func(1:3), 'pie')
           fhDraw(dft(:,2))
           xlabel('Frequency'), ylabel('|X(n)|')
-        elseif all(func(1:4) == 'hist')
+        elseif strcmp(func(1:4), 'hist')
           brdf(1, 2) = half;
           fhDraw(dft(:,2)), xlim(brdm), ylim(brdf)
           xlabel('|X(n)|'), ylabel('Frequency')
@@ -77,7 +79,8 @@ function [] = drawCurvDFT(fnDFT, fnWind, plyAud, smpSig, cnDraw)
           xlabel('Frequency'), ylabel('|X(n)|')
         end
         grid
-      catch ex
+      catch
+        ex = lasterror;
         warning(strcat(ex.identifier, ': Function error at [R][',num2str(plyAud.CurrentSample), ']:',ex.message))
         warning('Parameters are exported to the base workspace!');
         assignin('base','ex_F',freq)

@@ -29,6 +29,7 @@ function [] = drawSurfDFT(fhDFT, fnWind, plyAud, smpSig, cnDraw)
   brdf = [1 falDFT];
   brdh = [0 half];
   fig  = figure(getNextFigure()); set(fig, 'name', 'Surface graph');
+  set(fig, 'KeyPressFcn', @keyPressEscapeClose)
   while((plyAud.CurrentSample < plyAud.TotalSamples) && (plyAud.CurrentSample ~= 1))
     if(~ishandle(fig))
       break;
@@ -41,8 +42,8 @@ function [] = drawSurfDFT(fhDFT, fnWind, plyAud, smpSig, cnDraw)
       fr = abs(fhDFT(righ.*wind));
       ftl = shiftArr(ftl,1);
       ftr = shiftArr(ftr,1);
-      ftl(:,1) = satMatrix(fl(1:half),brdm); %swaparr(fl(1:half),2);
-      ftr(:,1) = satMatrix(fr(1:half),brdm); %swaparr(fr(1:half),2);
+      ftl(:,1) = min(max(fl(1:half), brdm(1)), brdm(2));
+      ftr(:,1) = min(max(fr(1:half), brdm(1)), brdm(2));
       subplot(2,2,1), plot(left), title('Sampled Signal'),xlabel('Sample'), ylabel('Value'),
       xlim([1 lenDFT]), ylim([-1 1]), grid
       subplot(2,2,2), plot(righ), title('Sampled Signal'),xlabel('Sample'), ylabel('Value'),
@@ -50,7 +51,8 @@ function [] = drawSurfDFT(fhDFT, fnWind, plyAud, smpSig, cnDraw)
       try
         subplot(2,2,3), fhDraw(ftl), title(namDFT), xlabel('SampleTime'),...
         ylabel(df), zlabel('|X(n)|'), ylim(brdh), xlim(brdf), zlim(brdm), view(brdv), grid
-      catch ex
+      catch
+        ex = lasterror;
         warning(strcat(ex.identifier, ': Function error at [L][',num2str(plyAud.CurrentSample), ']:',ex.message))
         warning('Parameters are exported to the base workspace!');
         assignin('base','ex_L',ftl)
@@ -59,7 +61,8 @@ function [] = drawSurfDFT(fhDFT, fnWind, plyAud, smpSig, cnDraw)
       try
         subplot(2,2,4), fhDraw(ftr), title(namDFT), xlabel('SampleTime'),...
         ylabel(df), zlabel('|X(n)|'), ylim(brdh), xlim(brdf), zlim(brdm), view(brdv), grid
-      catch ex
+      catch
+        ex = lasterror;
         warning(strcat(ex.identifier, ': Function error at [R][',num2str(plyAud.CurrentSample), ']:',ex.message))
         warning('Parameters are exported to the base workspace!');
         assignin('base','ex_R',ftr)

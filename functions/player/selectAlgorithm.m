@@ -11,19 +11,20 @@ function [id] = selectAlgorithm(algSel)
     end
     display(sprintf('[%s] > %s', padi, algSel.Alg{i}{2}));
   end
-  user = input(sprintf('Method ID:[%s] [%s] >> ', num2str(algSel.Cur), algSel.Alg{algSel.Cur}{2}),'s');
-  user = str2double(user);
-  if(isnan(user))
-    display(strcat('ID [',num2str(user),'] is invalid'));
+  sid = input(sprintf('Method ID:[%s] [%s] >> ', num2str(algSel.Cur), algSel.Alg{algSel.Cur}{2}),'s');
+  sid = strtrim(sid);
+  nid = str2double(sid);
+  if(isnan(nid))
+    if(length(sid) > 0)
+      display(strcat('ID [',sid,'] is invalid'));
+    end
     id = algSel.Cur;
-    return;
-  elseif((user < 1) || (user > lenalg))
-    display(strcat('ID [',num2str(user),'] not in bounds [1..',num2str(lenalg),']'));
+  elseif((nid < 1) || (nid > lenalg))
+    display(strcat('ID [',sid,'] not in bounds [1..',num2str(lenalg),']'));
     id = algSel.Cur;
-    return;
   else
-    user = floor(user);
-    id = user;
+    nid = floor(nid);
+    id = nid;
   end
   return;
 end

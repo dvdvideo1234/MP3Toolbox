@@ -1,6 +1,6 @@
 function [out] = fullPathMP3(in)
   % Normalizes the path to be used ferther
-  % For the example the current dis is "D:\test"
+  % For the example the current dir is "D:\test"
   % "test"                --> D:\test\test.mp3
   % "F:\samples\test"     --> F:\samples\test.mp3
   % "F:\samples\test.mp3" --> F:\samples\test.mp3

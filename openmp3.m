@@ -132,21 +132,22 @@ function [] = openmp3(path_mp3)
   DFT.Play.Mod          = 'seq';
   DFT.Format            = {};
   %Kill spaces
-  DFT.Path = killFBSpaces(DFT.Path);
+  DFT.Path = strtrim(DFT.Path);
   % Normalize the pat to always be full
   DFT.Path = fullPathMP3(DFT.Path);
   try
     [DFT.Signal,DFT.SampleRate,DFT.SampleBits,DFT.Format] = mp3read(DFT.Path);
-  catch err;
-    if(~isempty(err.message))
+  catch
+    ex = lasterror;
+    if(~isempty(ex.message))
       display(strcat('File invalid:',DFT.Path))
-      display(strcat('Error:',err.message))
+      display(strcat('Error:',ex.message))
       display('At least first open file should be valid !!!')
       return;
     end
   end
   DFT.Play.Lst{1} = DFT.Path;
-  DFT.Signal      = fixInputin2Col(DFT.Signal);
+  DFT.Signal      = fixInputIn2Co(DFT.Signal);
   DFT.Dummy       = length(DFT.Devices.output);
   DFT.DeviceID    = zeros(DFT.Dummy,1);
   for i = 1:DFT.Dummy
@@ -179,7 +180,7 @@ function [] = openmp3(path_mp3)
       DFT.Path       = DFT.Play.Lst{DFT.Play.Cur};
       % Load the next file as it it prevoiusly validated on adding
       [DFT.Signal,DFT.SampleRate,DFT.SampleBits,DFT.Format] = mp3read(DFT.Path);
-      DFT.Signal     = fixInputin2Col(DFT.Signal);
+      DFT.Signal     = fixInputIn2Co(DFT.Signal);
       DFT.SampleRateDefault = DFT.SampleRate;
       DFT.Object     = audioplayer(DFT.Signal,DFT.SampleRate,DFT.SampleBits,DFT.DeviceID);
       DFT.Object.Tag = slashstringn(DFT.Path,length(DFT.Path));
@@ -278,7 +279,7 @@ function [] = openmp3(path_mp3)
         switch DFT.UserInput
           case 'add', DFT.UserInput = input('Command >> Playlist >> Add >> ','s');
             % Kill the spaces
-            DFT.UserInput = killFBSpaces(DFT.UserInput);
+            DFT.UserInput = strtrim(DFT.UserInput);
             % Normalize the path to be alwayhs full"
             DFT.UserInput = fullPathMP3(DFT.UserInput);
             % Add to the playlist if Valid
@@ -286,14 +287,15 @@ function [] = openmp3(path_mp3)
             % 2-nd Current directory
             try
               DFT.Dummy = mp3read(DFT.UserInput);
-            catch err;
-              if(~isempty(err.message))
-                display(strcat('File invalid:',DFT.UserInput))
-                display(strcat('Error:',err.message))
-                display('This path cannot be added to the playlist !!!')
-              end
+            catch
+              ex = lasterror;
+              display(strcat('File invalid:',DFT.UserInput))
+              DFT.UserInput = '';
             end
-            DFT.Play.Lst = {DFT.Play.Lst{:,1},DFT.UserInput}';
+            if(~isempty(DFT.UserInput))
+              DFT.Play.Lst = {DFT.Play.Lst{:,1},DFT.UserInput}';
+              display(strcat('File added:',DFT.UserInput))
+            end
           case 'rem', DFT.UserInput = input('Command >> Playlist >> Rem >> ','s');
             % Set difference
             DFT.Dummy = floor(str2double(DFT.UserInput));
@@ -310,7 +312,7 @@ function [] = openmp3(path_mp3)
               DFT.Play.Cur   = getNextValidID(DFT.Play.Lst,DFT.Play.Cur,DFT.Play.Mod);
               DFT.Path       = DFT.Play.Lst{DFT.Play.Cur};
               [DFT.Signal,DFT.SampleRate,DFT.SampleBits,DFT.Format] = mp3read(DFT.Path);
-              DFT.Signal     = fixInputin2Col(DFT.Signal);
+              DFT.Signal     = fixInputIn2Co(DFT.Signal);
               DFT.Object     = audioplayer(DFT.Signal,DFT.SampleRate,DFT.SampleBits,DFT.DeviceID);
               DFT.Object.Tag = slashstringn(DFT.Path,length(DFT.Path));
               clc
@@ -346,7 +348,6 @@ function [] = openmp3(path_mp3)
         end
       case 'q',
         stop(DFT.Object);
-        clear all
         break;
       end
     end

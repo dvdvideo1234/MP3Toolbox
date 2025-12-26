@@ -29,7 +29,7 @@ function [out] = getNextValidID(pl,id,mod)
       cr = cr - ln;
       fl = fl - 1;
     end
-    display(strcat('Skipping [',num2str(item),']:',pl{item}));
+    display(strcat('Skipping [',num2str(cr),']:',pl{cr}));
   end
   out = cr;
 end
