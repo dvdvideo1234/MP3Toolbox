@@ -1,5 +1,6 @@
 function dispMp3Info(opts,mp3)
   % Displays info about aoudiplayer and audiodata
+  clc;
   display(sprintf('%s%s','Now playing >> ',mp3.Tag));
   display(strcat('Mpeg version <',num2str(opts.fmt.mpgVersion),...
                  '> layer <'     ,opts.fmt.mpgLayer,...

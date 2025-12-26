@@ -38,6 +38,8 @@ function [] = openmp3(path_mp3)
   %  10) "help" - Displays further command help
   % PLAyER made by dvd_video
   clc
+  global DFT
+  global AP
   % Load DFT algorithms. These cells contain function names processed via str2func
   DFT.Devices  = audiodevinfo;
   DFT.Calc = registerFunctionList('DFT calculator', {
@@ -118,7 +120,6 @@ function [] = openmp3(path_mp3)
     return;
   end
   DFT.Dummy             = 0;
-  DFT.Object            = 0;
   DFT.Path              = path_mp3;
   DFT.SampleRate        = 0;
   DFT.SampleRateDefault = 0;
@@ -135,29 +136,35 @@ function [] = openmp3(path_mp3)
   DFT.Path = strtrim(DFT.Path);
   % Normalize the pat to always be full
   DFT.Path = fullPathMP3(DFT.Path);
-  try
-    [DFT.Signal,DFT.SampleRate,DFT.SampleBits,DFT.Format] = mp3read(DFT.Path);
-  catch
-    ex = lasterror;
-    if(~isempty(ex.message))
-      display(strcat('File invalid:',DFT.Path))
-      display(strcat('Error:',ex.message))
-      display('At least first open file should be valid !!!')
-      return;
+  if(~isempty(DFT.Path))
+    try
+      [DFT.Signal,DFT.SampleRate,DFT.SampleBits,DFT.Format] = mp3read(DFT.Path);
+    catch
+      ex = lasterror;
+      if(~isempty(ex.message))
+        display(strcat('File invalid:',DFT.Path))
+        display(strcat('Error:',ex.message))
+        display('At least first open file should be valid !!!')
+        return;
+      end
     end
+  else
+    display(strcat('File invalid:',DFT.Path))
+    display('At least first open file should be valid !!!')
+    return;
   end
   DFT.Play.Lst{1} = DFT.Path;
   DFT.Signal      = fixInputIn2Co(DFT.Signal);
   DFT.Dummy       = length(DFT.Devices.output);
   DFT.DeviceID    = zeros(DFT.Dummy,1);
   for i = 1:DFT.Dummy
-    display(strcat('DeviceID[',num2str(DFT.Devices.output(i).ID),']: "',DFT.Devices.output(i).Name,...
+    display(strcat('[',num2str(DFT.Devices.output(i).ID),']: "',DFT.Devices.output(i).Name,...
                    '" v.',num2str(DFT.Devices.output(i).DriverVersion)))
     DFT.DeviceID(i,1) = DFT.Devices.output(i).ID;
   end
   display(' ');
   while(1)
-    DFT.UserInput=input('Device ID? >> ','s');
+    DFT.UserInput=input('Device ID >> ','s');
     DFT.UserInput = fix(str2double(DFT.UserInput));
     if(valuePersistInArray(DFT.UserInput,DFT.DeviceID))
          DFT.DeviceID = (DFT.UserInput == DFT.DeviceID)'*DFT.DeviceID;
@@ -168,71 +175,72 @@ function [] = openmp3(path_mp3)
   clc
   % Create the audio player and start doing the thing
   DFT.SampleRateDefault = DFT.SampleRate;
-  DFT.Object     = audioplayer(DFT.Signal,DFT.SampleRate,DFT.SampleBits,DFT.DeviceID);
-  DFT.Object.Tag = slashstringn(DFT.Path,length(DFT.Path));
-  stop(DFT.Object)
-  dispMp3Info(DFT.Format,DFT.Object);
-  play(DFT.Object);
+  AP = audioplayer(DFT.Signal,DFT.SampleRate,DFT.SampleBits,DFT.DeviceID);
+  AP.Tag = slashstringn(DFT.Path,length(DFT.Path));
+  stop(AP)
+  dispMp3Info(DFT.Format,AP);
+  play(AP);
+  set(AP, 'TimerPeriod', 0.1);
+  set(AP, 'TimerFcn', @runTimerFunction);
   while(1)
-    if(DFT.Object.CurrentSample > (DFT.Object.TotalSamples - DFT.SampleRate))
-      stop(DFT.Object);
+    if(AP.CurrentSample > (AP.TotalSamples - DFT.SampleRate))
+      stop(AP);
       DFT.Play.Cur   = getNextValidID(DFT.Play.Lst,DFT.Play.Cur,DFT.Play.Mod);
       DFT.Path       = DFT.Play.Lst{DFT.Play.Cur};
       % Load the next file as it it prevoiusly validated on adding
       [DFT.Signal,DFT.SampleRate,DFT.SampleBits,DFT.Format] = mp3read(DFT.Path);
       DFT.Signal     = fixInputIn2Co(DFT.Signal);
       DFT.SampleRateDefault = DFT.SampleRate;
-      DFT.Object     = audioplayer(DFT.Signal,DFT.SampleRate,DFT.SampleBits,DFT.DeviceID);
-      DFT.Object.Tag = slashstringn(DFT.Path,length(DFT.Path));
-      clc;
-      dispMp3Info(DFT.Format,DFT.Object);
-      play(DFT.Object);
+      AP = audioplayer(DFT.Signal,DFT.SampleRate,DFT.SampleBits,DFT.DeviceID);
+      AP.Tag = slashstringn(DFT.Path,length(DFT.Path));
+      dispMp3Info(DFT.Format,AP);
+      play(AP);
       continue;
     else
       % Needs waiting for a key
       DFT.UserInput=input('Command >> ','s');
       switch DFT.UserInput
       case 'save', display('Store selections in a file.');
-      case 'p', pause(DFT.Object);
-      case 'rate', DFT.Dummy     = num2str(DFT.Object.SampleRate);
+      case 'p', pause(AP);
+      case 'rate', DFT.Dummy     = num2str(AP.SampleRate);
                    DFT.Dummy     = sprintf('Command >> Rate %sHz >> ', DFT.Dummy);
                    DFT.UserInput = input(DFT.Dummy ,'s');
         switch DFT.UserInput
-          case 'd', pause(DFT.Object); DFT.Object.SampleRate=DFT.SampleRateDefault; resume(DFT.Object);
+          case 'd', pause(AP); AP.SampleRate=DFT.SampleRateDefault; resume(AP);
           case 'b', continue;
           otherwise
             if(str2double(DFT.UserInput) ~= 0)
               DFT.UserInput=str2double(DFT.UserInput);
-              if(((DFT.UserInput > 0) && (DFT.Object.SampleRate+DFT.UserInput < 1000000))...
-                || ((DFT.UserInput < 0) && (DFT.Object.SampleRate+DFT.UserInput > 0)))
-                pause(DFT.Object);
-                DFT.Object.SampleRate = DFT.Object.SampleRate + DFT.UserInput;
-                resume(DFT.Object);
-              end
-            end
+              if(((DFT.UserInput > 0) && (AP.SampleRate+DFT.UserInput < 1000000))...
+                || ((DFT.UserInput < 0) && (AP.SampleRate+DFT.UserInput > 0)))
+                pause(AP);
+                AP.SampleRate = AP.SampleRate + DFT.UserInput;
+                resume(AP);
+             end
+           end
          end
        case 'seek'
-         DFT.Dummy = percent_q(DFT.Object.CurrentSample,DFT.Object.TotalSamples);
+         DFT.Dummy = percent_q(AP.CurrentSample,AP.TotalSamples);
          DFT.Dummy = num2str(DFT.Dummy);
          DFT.Dummy = sprintf('Command >> Seek %s%% >> ',DFT.Dummy);
          DFT.UserInput = input(DFT.Dummy,'s');
          switch DFT.UserInput
            case 'b', continue;
            case 'f',
-             stop(DFT.Object);
-             play(DFT.Object,[2 DFT.Object.TotalSamples]);
+             stop(AP);
+             play(AP,[2 AP.TotalSamples]);
            case 'l',
-             stop(DFT.Object);
-             play(DFT.Object,[DFT.Object.TotalSamples DFT.Object.TotalSamples]);
+             stop(AP);
+             play(AP,[AP.TotalSamples AP.TotalSamples]);
            otherwise
              DFT.Dummy = str2double(DFT.UserInput);
              if(isnan(DFT.Dummy))
                continue;
              end
-             DFT.Dummy = part_q(DFT.Dummy,DFT.Object.TotalSamples);
+             DFT.Dummy = part_q(DFT.Dummy,AP.TotalSamples);
              DFT.Dummy = floor(DFT.Dummy);
-             stop(DFT.Object);
-             play(DFT.Object,[DFT.Dummy DFT.Object.TotalSamples]);
+             stop(AP);
+             play(AP,[DFT.Dummy AP.TotalSamples]);
          end
       case 'v', DFT.UserInput = input('Command >> View >> ','s');
         switch DFT.UserInput
@@ -241,11 +249,11 @@ function [] = openmp3(path_mp3)
           case 'p',
             DFT.Plot2D.Cur = selectAlgorithm(DFT.Plot2D);
             DFT.Dummy      = DFT.Plot2D.Alg{DFT.Plot2D.Cur};
-            drawCurvDFT(DFT.Calc.Alg{DFT.Calc.Cur}{1}, DFT.Wind.Alg{DFT.Wind.Cur}{1}, DFT.Object, DFT.Signal, DFT.Dummy);
+            drawCurvDFT(DFT.Calc.Alg{DFT.Calc.Cur}{1}, DFT.Wind.Alg{DFT.Wind.Cur}{1}, AP, DFT.Signal, DFT.Dummy);
           case 's',
             DFT.Plot3D.Cur = selectAlgorithm(DFT.Plot3D);
             DFT.Dummy      = DFT.Plot3D.Alg{DFT.Plot3D.Cur};
-            drawSurfDFT(DFT.Calc.Alg{DFT.Calc.Cur}{1}, DFT.Wind.Alg{DFT.Wind.Cur}{1}, DFT.Object, DFT.Signal, DFT.Dummy);
+            drawSurfDFT(DFT.Calc.Alg{DFT.Calc.Cur}{1}, DFT.Wind.Alg{DFT.Wind.Cur}{1}, AP, DFT.Signal, DFT.Dummy);
           case 'b', continue;
           case 'inf', display({
                   'b   - Back';...
@@ -256,11 +264,11 @@ function [] = openmp3(path_mp3)
                   'inf - Displays this info'});
           otherwise , display('Command invalid !!!');
         end
-      case 's'   , stop(DFT.Object);
+      case 's'   , stop(AP);
       case 'clc' , clc;
-      case 'inf' , display(DFT.Object);
+      case 'inf' , display(AP);
       case 'dir' , dir(DFT.Path(1:slashstringn(DFT.Path,0)));
-      case 'r'   , resume(DFT.Object);
+      case 'r'   , resume(AP);
       case 'h'   , display({'p - Pause';...
                             'r - Resume';...
                             's - Stop';...
@@ -285,16 +293,17 @@ function [] = openmp3(path_mp3)
             % Add to the playlist if Valid
             % 1-st Current file
             % 2-nd Current directory
-            try
-              DFT.Dummy = mp3read(DFT.UserInput);
-            catch
-              ex = lasterror;
-              display(strcat('File invalid:',DFT.UserInput))
-              DFT.UserInput = '';
+            if(~isempty(DFT.UserInput))
+              try
+                DFT.Dummy = mp3read(DFT.UserInput);
+              catch
+                display(strcat('File invalid:',DFT.UserInput))
+                DFT.UserInput = '';
+              end
             end
             if(~isempty(DFT.UserInput))
               DFT.Play.Lst = {DFT.Play.Lst{:,1},DFT.UserInput}';
-              display(strcat('File added:',DFT.UserInput))
+              display(strcat('File added:',DFT.UserInput));
             end
           case 'rem', DFT.UserInput = input('Command >> Playlist >> Rem >> ','s');
             % Set difference
@@ -308,16 +317,15 @@ function [] = openmp3(path_mp3)
             DFT.Dummy = floor(str2double(DFT.UserInput));
             % Valid item number in the playlist
             if(~(isnan(DFT.Dummy) || (DFT.Dummy < 1) || (DFT.Dummy > length(DFT.Play.Lst))))
-              stop(DFT.Object);
+              stop(AP);
               DFT.Play.Cur   = getNextValidID(DFT.Play.Lst,DFT.Play.Cur,DFT.Play.Mod);
               DFT.Path       = DFT.Play.Lst{DFT.Play.Cur};
               [DFT.Signal,DFT.SampleRate,DFT.SampleBits,DFT.Format] = mp3read(DFT.Path);
               DFT.Signal     = fixInputIn2Co(DFT.Signal);
-              DFT.Object     = audioplayer(DFT.Signal,DFT.SampleRate,DFT.SampleBits,DFT.DeviceID);
-              DFT.Object.Tag = slashstringn(DFT.Path,length(DFT.Path));
-              clc
-              dispMp3Info(DFT.Format,DFT.Object);
-              play(DFT.Object);
+              AP             = audioplayer(DFT.Signal,DFT.SampleRate,DFT.SampleBits,DFT.DeviceID);
+              AP.Tag = slashstringn(DFT.Path,length(DFT.Path));
+              dispMp3Info(DFT.Format,AP);
+              play(AP);
             end
           case 'inf', clc,
             DFT.Dummy = 1;
@@ -326,30 +334,56 @@ function [] = openmp3(path_mp3)
               DFT.Dummy = DFT.Dummy + 1;
             end
             display(' ');
-         end
+        end
       case 'o',
-        pause(DFT.Object);
+        pause(AP);
         DFT.UserInput=input('Command >> OpenFile >> ','s');
         if(DFT.UserInput == 'b')
-          resume(DFT.Object);
+          resume(AP);
           continue;
         elseif(~isempty(DFT.UserInput))
           % Normalize full file path
           DFT.UserInput = fullPathMP3(DFT.UserInput);
-          if(exist(DFT.UserInput,'file'))
-            stop(DFT.Object);
+          if(~isempty(DFT.UserInput)) 
+            stop(AP);
             openmp3(DFT.UserInput);
             break; % Kill the session
           else
             display('File not Found');
-            resume(DFT.Object);
+            resume(AP);
             continue;
           end
         end
       case 'q',
-        stop(DFT.Object);
+        stop(AP);
         break;
       end
+    end
+  end
+end
+
+function runTimerFunction(obj, event)
+  global DFT;
+  global AP;
+  if(isplaying(obj))
+    if(obj.CurrentSample > (obj.TotalSamples - obj.SampleRate))
+      if(isempty(DFT) || ~isstruct(DFT))
+        warning('Main structure is empty!');
+        return;
+      end
+      stop(obj);
+      DFT.Play.Cur   = getNextValidID(DFT.Play.Lst,DFT.Play.Cur,DFT.Play.Mod);
+      DFT.Path       = DFT.Play.Lst{DFT.Play.Cur};
+      % Load the next file as it it prevoiusly validated on adding
+      [DFT.Signal,DFT.SampleRate,DFT.SampleBits,DFT.Format] = mp3read(DFT.Path);
+      DFT.Signal     = fixInputIn2Co(DFT.Signal);
+      DFT.SampleRateDefault = DFT.SampleRate;
+      AP = audioplayer(DFT.Signal,DFT.SampleRate,DFT.SampleBits,DFT.DeviceID);
+      AP.Tag = slashstringn(DFT.Path,length(DFT.Path));
+      dispMp3Info(DFT.Format, AP);
+      play(AP);
+      set(AP, 'TimerPeriod', 0.1);
+      set(AP, 'TimerFcn', @runTimerFunction);
     end
   end
 end
