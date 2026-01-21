@@ -4,7 +4,6 @@ function [out] = registerFunctionList(nam, in)
   out.Alg = {};
   cnt = 0;
   flg = 0;
-  foo = 0;
   for iD = 1:length(in);
     name = strtrim(in{iD}{1});
     if(exist(name))
@@ -16,12 +15,10 @@ function [out] = registerFunctionList(nam, in)
       end
       out.Alg = [out.Alg; {new}];
     else
-      if(flg == 0) flg = 1;
-        disp('');
-        disp(strcat('Initializing set: <', nam,'>'));
-        disp('---------------------------------');
+      if(flg == 0), flg = 1;
+        fprintf('Initializing: %s\n', nam);
       end
-      disp(strcat('Function unavailable: <', name,'>'));
+      fprintf('  Missing [%d]: %s\n', iD, name);
     end
   end
   out.Siz = cnt;

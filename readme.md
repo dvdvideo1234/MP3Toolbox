@@ -26,6 +26,15 @@ made by [Alfredo Fernandez][ref-af] or [Dan Ellis][ref-de] from the [Mathworks c
 The repository contains this dependency. [The player is entirely my thing][ref-play].
 Currently [Dan's implementation][ref-html] is chosen due to the multi-platform support.
 
+### Troubleshoot
+1. The player is showing me I miss a funtion
+ * Do not worry. Your environment misses this plotter and it will be skipped.
+2. I get `File invalid` to a perfectly valid file
+ * This happens becuse of Windows `Ransomware protection`.
+ * Navigate to `Allow app trough controlled folder access` >
+   `Add an allowed app` > `Recently blocked apps`
+ * Click the `+` button in `front of`/`next to` `mpg123.exe` to allow it.
+
 [ref-file]: https://www.mathworks.com/matlabcentral/fileexchange/
 [ref-af]: https://www.mathworks.com/matlabcentral/fileexchange/6152-mp3write-and-mp3read
 [ref-play]: https://www.mathworks.com/matlabcentral/fileexchange/63764-console-mp3-player-and-dft-plotter?s_tid=prof_contriblnk

@@ -157,9 +157,11 @@ function [] = openmp3(path_mp3)
   DFT.Signal      = fixInputIn2Co(DFT.Signal);
   DFT.Dummy       = length(DFT.Devices.output);
   DFT.DeviceID    = zeros(DFT.Dummy,1);
+  fprintf('Audio device output:\n')
   for i = 1:DFT.Dummy
-    display(strcat('[',num2str(DFT.Devices.output(i).ID),']: "',DFT.Devices.output(i).Name,...
-                   '" v.',num2str(DFT.Devices.output(i).DriverVersion)))
+    fprintf('  [%d]: %s (%s)\n', DFT.Devices.output(i).ID,...
+                                 DFT.Devices.output(i).Name,...
+                                 num2str(DFT.Devices.output(i).DriverVersion));
     DFT.DeviceID(i,1) = DFT.Devices.output(i).ID;
   end
   display(' ');

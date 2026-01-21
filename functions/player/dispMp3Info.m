@@ -1,14 +1,13 @@
 function dispMp3Info(opts,mp3)
   % Displays info about aoudiplayer and audiodata
   clc;
-  display(sprintf('%s%s','Now playing >> ',mp3.Tag));
-  display(strcat('Mpeg version <',num2str(opts.fmt.mpgVersion),...
-                 '> layer <'     ,opts.fmt.mpgLayer,...
-                 '> bitrate <'   ,num2str(opts.fmt.mpgBitrate/1000),...
-                 '> kb/s of <'   ,opts.fmt.mpgChanmode,'> <',opts.fmt.mpgPad,'>'));
-  display(strcat('Stream <',num2str(opts.fmt.nChannels),'> channels <',...
-                            num2str(opts.fmt.nBitsPerSample),'> bits per sample <',...
-                            num2str(opts.fmt.nSamplesPerSec/1000),'> Khz <',...
-                            num2str((opts.fmt.mpgNFrames*opts.fmt.mpgSampsPerFrame)/(60*opts.fmt.nSamplesPerSec)),'> minutes'));
+  fprintf('Now playing: %s\n', mp3.Tag);
+  fprintf('  MPEG    : %d\n', opts.fmt.mpgVersion);
+  fprintf('  Layer   : %s\n', opts.fmt.mpgLayer);
+  fprintf('  BitRate : %d kb/s\n', (opts.fmt.mpgBitrate/1000));
+  fprintf('  Channels: %d (%s)\n', opts.fmt.nChannels, opts.fmt.mpgChanmode);
+  fprintf('  BitsSamp: %d\n', opts.fmt.nBitsPerSample);
+  fprintf('  Sampling: %d Hz\n', opts.fmt.nSamplesPerSec);
+  fprintf('  Duration: %f min\n', ((opts.fmt.mpgNFrames*opts.fmt.mpgSampsPerFrame)/(60*opts.fmt.nSamplesPerSec)));
   disp(' ');
 end
