@@ -9,4 +9,3 @@ function [] = setup_toolbox()
   addpath(fullfile(base, 'functions', 'events'));
   addpath(fullfile(base, 'functions', 'mp3readwrite'));
 end
-

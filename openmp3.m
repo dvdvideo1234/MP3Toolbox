@@ -167,12 +167,12 @@ function [] = openmp3(path_mp3)
   display(' ');
   while(1)
     DFT.UserInput=input('Device ID >> ','s');
+    if(strcmp(DFT.UserInput, 'q')), return; end
     DFT.UserInput = fix(str2double(DFT.UserInput));
     if(valuePersistInArray(DFT.UserInput,DFT.DeviceID))
          DFT.DeviceID = (DFT.UserInput == DFT.DeviceID)'*DFT.DeviceID;
     end
     if(length(DFT.DeviceID) == 1), break; end
-    if(strcmp(DFT.UserInput,'q')), return; end
   end
   clc
   % Create the audio player and start doing the thing
