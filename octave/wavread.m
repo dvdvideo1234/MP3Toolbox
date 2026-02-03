@@ -3,7 +3,7 @@ function [sig, sf, bits]=wavread(wavefile, siz)
 % WAVREAD  Load Microsoft Windows .WAV format sound files.
 %
 %  [sig, sf, bits] = wavread(wavfile [, siz])
-%  
+%
 %        sig : signal
 %         sf : sampling freq.
 %       bits : the number of bits per sample
@@ -67,6 +67,7 @@ function [sig, sf, bits]=wavread(wavefile, siz)
     [sig, cnt] = fread(fid, [1, et-st+1],'uchar');
     sig = (sig-128)/128;
   end
+
   if (format(4)+format(2) == 10)
     fseek(fid, (st-1)*2, 0);
     [sig, cnt] = fread(fid, [2,et-st+1], 'uchar');
@@ -86,5 +87,5 @@ function [sig, sf, bits]=wavread(wavefile, siz)
   end
   fclose(fid);
 
-  sig = sig'; 
+  sig = sig';
 end
